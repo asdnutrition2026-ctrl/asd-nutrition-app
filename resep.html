@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resep Sehat - ASD Nutrition AI Care</title>
+    <style>
+        *{box-sizing:border-box; margin:0; padding:0;}
+        body{
+            font-family:'Segoe UI', Roboto, -apple-system, sans-serif;
+            background:#eef1f5;
+            display:flex; justify-content:center; padding:24px 0;
+        }
+        .phone{
+            width:390px; max-width:100vw;
+            background:#ffffff;
+            border-radius:36px;
+            overflow:hidden;
+            box-shadow:0 20px 60px rgba(0,0,0,0.15);
+            padding-bottom:90px;
+            position:relative;
+            min-height:90vh;
+            max-height:850px;
+            display:flex; flex-direction:column;
+        }
+        .main-content{
+            flex:1; overflow-y:auto; padding:20px; padding-bottom:80px;
+        }
+        .page-header{
+            display:flex; align-items:center; gap:12px; margin-bottom:20px;
+        }
+        .back-btn{
+            width:40px; height:40px; border-radius:50%;
+            background:#f3f4f6; display:flex; align-items:center; justify-content:center;
+            cursor:pointer; border:none; font-size:18px; text-decoration:none; color:#1f2937;
+        }
+        .page-title{ font-size:22px; color:#12224a; font-weight:700; }
+
+        /* Filter */
+        .filter-scroll{
+            display:flex; gap:8px; overflow-x:auto; margin-bottom:20px; padding-bottom:4px;
+        }
+        .filter-scroll::-webkit-scrollbar{ display:none; }
+        .filter-chip{
+            padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600;
+            white-space:nowrap; cursor:pointer; border:2px solid #e5e7eb;
+            background:white; color:#6b7280; font-family:inherit;
+        }
+        .filter-chip.active{ background:#3b5bdb; color:white; border-color:#3b5bdb; }
+
+        /* Resep cards */
+        .resep-list{ display:flex; flex-direction:column; gap:16px; }
+
+        .resep-card{
+            background:#f9fafb; border-radius:20px; overflow:hidden;
+            border:1px solid #e5e7eb; cursor:pointer;
+            transition:all 0.2s;
+        }
+        .resep-card:hover{ box-shadow:0 8px 24px rgba(0,0,0,0.08); transform:translateY(-2px); }
+        .resep-image{
+            height:140px; display:flex; align-items:center; justify-content:center;
+            font-size:60px;
+        }
+        .resep-image.renyah{ background:linear-gradient(135deg,#fdf3e3,#fde8c8); }
+        .resep-image.lembut{ background:linear-gradient(135deg,#e8f7ec,#d4edda); }
+        .resep-image.manis{ background:linear-gradient(135deg,#fdeaf1,#fcd5e4); }
+        .resep-image.gurih{ background:linear-gradient(135deg,#eaf2fb,#d4e4fc); }
+        .resep-info{ padding:16px; }
+        .resep-info h3{ font-size:15px; color:#12224a; margin-bottom:4px; }
+        .resep-info p{ font-size:11px; color:#6b7280; line-height:1.5; margin-bottom:8px; }
+        .resep-tags{ display:flex; gap:6px; flex-wrap:wrap; }
+        .resep-tag{
+            font-size:10px; padding:4px 10px; border-radius:12px;
+            font-weight:600; background:#e8f7ec; color:#4caf50;
+        }
+        .resep-tag.sensori{ background:#f2edfb; color:#8b5cf6; }
+        .resep-tag.protein{ background:#eaf2fb; color:#3b82f6; }
+
+        /* Modal */
+        .modal-overlay{
+            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.6); z-index:100; justify-content:center; align-items:center; padding:20px;
+        }
+        .modal-overlay.active{ display:flex; }
+        .modal-content{
+            background:white; border-radius:24px; padding:24px;
+            max-width:390px; width:100%; max-height:80vh; overflow-y:auto;
+        }
+        .modal-close{
+            width:36px; height:36px; border-radius:50%; background:#f3f4f6;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; border:none; font-size:16px; margin-bottom:16px;
+        }
+        .modal-content h2{ font-size:20px; color:#12224a; margin-bottom:8px; }
+        .modal-content .modal-tags{ display:flex; gap:6px; margin-bottom:16px; }
+        .modal-content h4{ font-size:14px; color:#12224a; margin:16px 0 8px 0; }
+        .modal-content ul{ margin-left:20px; margin-bottom:12px; }
+        .modal-content li{ font-size:13px; color:#1f2937; line-height:1.8; }
+        .modal-content p{ font-size:13px; color:#6b7280; line-height:1.8; }
+        .modal-tip{
+            background:#fef3c7; padding:14px; border-radius:12px;
+            font-size:12px; color:#92400e; margin-top:16px;
+        }
+
+        /* Bottom nav */
+        .bottomnav{
+            position:absolute; bottom:0; left:0; right:0;
+            background:#fff; border-top:1px solid #eef0f3;
+            display:flex; justify-content:space-around; align-items:center;
+            padding:10px 6px 18px 6px;
+        }
+        .nav-item{
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            font-size:10.5px; color:#9aa2b1; font-weight:600; cursor:pointer;
+            border:none; background:none; text-decoration:none;
+        }
+        .nav-item.active{ color:#3b5bdb; }
+        .nav-item .navic{ font-size:18px; }
+        .nav-item.fab .navic{
+            width:46px; height:46px; border-radius:50%;
+            background:#3b5bdb; color:#fff; display:flex; align-items:center; justify-content:center;
+            font-size:22px; margin-top:-26px; box-shadow:0 8px 16px rgba(59,91,219,0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone">
+    <div class="main-content">
+        
+        <!-- HEADER -->
+        <div class="page-header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1 class="page-title">👨‍🍳 Resep Sehat</h1>
+        </div>
+
+        <!-- FILTER -->
+        <div class="filter-scroll">
+            <button class="filter-chip active" onclick="filterResep('semua', this)">📋 Semua</button>
+            <button class="filter-chip" onclick="filterResep('renyah', this)">🍟 Renyah</button>
+            <button class="filter-chip" onclick="filterResep('lembut', this)">🍦 Lembut</button>
+            <button class="filter-chip" onclick="filterResep('manis', this)">🍰 Manis</button>
+            <button class="filter-chip" onclick="filterResep('gurih', this)">🍗 Gurih</button>
+        </div>
+
+        <!-- LIST RESEP -->
+        <div class="resep-list" id="resepList">
+            
+            <!-- 1. Nugget Ayam Sayur -->
+            <div class="resep-card" data-kategori="renyah gurih" onclick="openResep('nugget')">
+                <div class="resep-image renyah">🍗</div>
+                <div class="resep-info">
+                    <h3>Nugget Ayam Sayur Homemade</h3>
+                    <p>Nugget renyah dengan sayuran tersembunyi, cocok untuk anak yang suka tekstur crispy</p>
+                    <div class="resep-tags">
+                        <span class="resep-tag">🧠 Renyah</span>
+                        <span class="resep-tag sensori">🔒 Hidden Veggies</span>
+                        <span class="resep-tag protein">🥩 Protein</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Sup Krim Labu -->
+            <div class="resep-card" data-kategori="lembut gurih" onclick="openResep('supkrim')">
+                <div class="resep-image lembut">🎃</div>
+                <div class="resep-info">
+                    <h3>Sup Krim Labu Kuning</h3>
+                    <p>Tekstur lembut dan rasa manis alami, kaya vitamin A untuk tumbuh kembang</p>
+                    <div class="resep-tags">
+                        <span class="resep-tag">🧠 Lembut</span>
+                        <span class="resep-tag sensori">🌈 Warna Cerah</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Pancake Pisang -->
+            <div class="resep-card" data-kategori="lembut manis" onclick="openResep('pancake')">
+                <div class="resep-image manis">🥞</div>
+                <div class="resep-info">
+                    <h3>Pancake Pisang Tanpa Gula</h3>
+                    <p>Manis alami dari pisang, tekstur lembut, bisa ditambah puree sayur</p>
+                    <div class="resep-tags">
+                        <span class="resep-tag">🧠 Lembut</span>
+                        <span class="resep-tag sensori">🔒 Hidden Veggies</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Tahu Crispy -->
+            <div class="resep-card" data-kategori="renyah gurih" onclick="openResep('tahu')">
+                <div class="resep-image renyah">🧈</div>
+                <div class="resep-info">
+                    <h3>Tahu Crispy Tepung Beras</h3>
+                    <p>Renyah di luar, lembut di dalam. Sumber protein nabati yang ramah anak</p>
+                    <div class="resep-tags">
+                        <span class="resep-tag">🧠 Renyah</span>
+                        <span class="resep-tag protein">🌱 Protein Nabati</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Smoothies Buah -->
+            <div class="resep-card" data-kategori="lembut manis" onclick="openResep('smoothies')">
+                <div class="resep-image manis">🥤</div>
+                <div class="resep-info">
+                    <h3>Smoothies Mangga + Yogurt</h3>
+                    <p>Minuman lembut kaya probiotik, bisa ditambah bayam tanpa mengubah rasa</p>
+                    <div class="resep-tags">
+                        <span class="resep-tag">🧠 Lembut</span>
+                        <span class="resep-tag sensori">🔒 Hidden Veggies</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Nasi Goreng Pelangi -->
+            <div class="resep-card" data-kategori="gurih" onclick="openResep('nasgor')">
+                <div class="resep-image gurih">🍚</div>
+                <div class="resep-info">
+                    <h3>Nasi Goreng Pelangi</h3>
+                    <p>Nasi goreng warna-warni alami dari sayuran, menarik untuk anak ASD</p>
+                    <div class="resep-tags">
+                        <span class="resep-tag">🌈 Warna-warni</span>
+                        <span class="resep-tag sensori">👀 Visual Appeal</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-content" id="modalContent" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottomnav">
+        <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
+        <a href="history.html" class="nav-item"><div class="navic">📊</div>Riwayat</a>
+        <a href="monitoring.html" class="nav-item fab"><div class="navic">+</div></a>
+        <a href="konsultasi.html" class="nav-item"><div class="navic">💬</div>Pesan</a>
+        <a href="#" class="nav-item" onclick="logout()"><div class="navic">👤</div>Profil</a>
+    </div>
+</div>
+
+<script>
+    const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
+    if (!session.userId) { window.location.href = 'index.html'; }
+
+    // Filter resep
+    function filterResep(kat, btn) {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        
+        document.querySelectorAll('.resep-card').forEach(card => {
+            if (kat === 'semua' || card.dataset.kategori.includes(kat)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Data resep
+    const resepData = {
+        'nugget': {
+            title: '🍗 Nugget Ayam Sayur Homemade',
+            tags: '<span class="resep-tag">🧠 Renyah</span><span class="resep-tag sensori">🔒 Hidden Veggies</span>',
+            content: `
+                <h4>📝 Bahan:</h4>
+                <ul>
+                    <li>250g daging ayam giling</li>
+                    <li>1 wortel, parut halus</li>
+                    <li>1/2 labu siam, parut halus</li>
+                    <li>2 sdm tepung roti</li>
+                    <li>1 butir telur</li>
+                    <li>Garam secukupnya</li>
+                </ul>
+                <h4>👨‍🍳 Cara Membuat:</h4>
+                <ol>
+                    <li>Campur semua bahan, aduk rata</li>
+                    <li>Bentuk sesuai selera (bintang, hati, dll)</li>
+                    <li>Balur tepung roti</li>
+                    <li>Goreng dengan api kecil hingga keemasan</li>
+                </ol>
+                <div class="modal-tip">💡 <strong>Tips Sensori:</strong> Sayuran diparut halus sehingga tidak terasa teksturnya. Gunakan cetakan lucu untuk menarik minat anak!</div>
+            `
+        },
+        'supkrim': {
+            title: '🎃 Sup Krim Labu Kuning',
+            tags: '<span class="resep-tag">🧠 Lembut</span><span class="resep-tag sensori">🌈 Warna Cerah</span>',
+            content: `
+                <h4>📝 Bahan:</h4>
+                <ul>
+                    <li>300g labu kuning, kukus</li>
+                    <li>200ml susu full cream</li>
+                    <li>1 sdm butter</li>
+                    <li>Bawang putih secukupnya</li>
+                </ul>
+                <h4>👨‍🍳 Cara Membuat:</h4>
+                <ol>
+                    <li>Tumis bawang putih dengan butter</li>
+                    <li>Blender labu + susu hingga halus</li>
+                    <li>Masak dengan api kecil, aduk hingga mengental</li>
+                </ol>
+                <div class="modal-tip">💡 <strong>Tips:</strong> Warna cerah alami menarik perhatian anak. Bisa ditambah keju untuk rasa gurih.</div>
+            `
+        },
+        'pancake': {
+            title: '🥞 Pancake Pisang Tanpa Gula',
+            tags: '<span class="resep-tag">🧠 Lembut</span><span class="resep-tag sensori">🔒 Hidden Veggies</span>',
+            content: `
+                <h4>📝 Bahan:</h4>
+                <ul>
+                    <li>2 pisang matang, haluskan</li>
+                    <li>1 butir telur</li>
+                    <li>5 sdm tepung terigu</li>
+                    <li>Opsional: 2 sdm puree wortel</li>
+                </ul>
+                <h4>👨‍🍳 Cara Membuat:</h4>
+                <ol>
+                    <li>Campur semua bahan, aduk rata</li>
+                    <li>Panaskan wajan anti lengket</li>
+                    <li>Tuang adonan, masak hingga kecoklatan</li>
+                </ol>
+                <div class="modal-tip">💡 <strong>Tips:</strong> Tambahkan puree wortel/labu untuk nutrisi ekstra tanpa mengubah rasa manis pisang.</div>
+            `
+        },
+        'tahu': {
+            title: '🧈 Tahu Crispy Tepung Beras',
+            tags: '<span class="resep-tag">🧠 Renyah</span><span class="resep-tag protein">🌱 Protein Nabati</span>',
+            content: `
+                <h4>📝 Bahan:</h4>
+                <ul>
+                    <li>1 blok tahu putih, potong dadu</li>
+                    <li>5 sdm tepung beras</li>
+                    <li>2 sdm tepung maizena</li>
+                    <li>Air es secukupnya</li>
+                </ul>
+                <h4>👨‍🍳 Cara Membuat:</h4>
+                <ol>
+                    <li>Campur tepung + air es (adonan kental)</li>
+                    <li>Celup tahu ke adonan</li>
+                    <li>Goreng hingga crispy keemasan</li>
+                </ol>
+                <div class="modal-tip">💡 <strong>Tips:</strong> Sajikan dengan saus favorit anak. Tekstur renyah biasanya disukai anak ASD!</div>
+            `
+        },
+        'smoothies': {
+            title: '🥤 Smoothies Mangga + Yogurt',
+            tags: '<span class="resep-tag">🧠 Lembut</span><span class="resep-tag sensori">🔒 Hidden Veggies</span>',
+            content: `
+                <h4>📝 Bahan:</h4>
+                <ul>
+                    <li>1 mangga matang</li>
+                    <li>100ml yogurt plain</li>
+                    <li>Opsional: segenggam bayam segar</li>
+                </ul>
+                <h4>👨‍🍳 Cara Membuat:</h4>
+                <ol>
+                    <li>Blender semua bahan hingga halus</li>
+                    <li>Tuang ke gelas favorit anak</li>
+                    <li>Sajikan dingin</li>
+                </ol>
+                <div class="modal-tip">💡 <strong>Tips:</strong> Bayam TIDAK merubah rasa mangga! Anak dapat nutrisi sayur tanpa sadar.</div>
+            `
+        },
+        'nasgor': {
+            title: '🍚 Nasi Goreng Pelangi',
+            tags: '<span class="resep-tag">🌈 Warna-warni</span><span class="resep-tag sensori">👀 Visual Appeal</span>',
+            content: `
+                <h4>📝 Bahan:</h4>
+                <ul>
+                    <li>1 piring nasi putih</li>
+                    <li>1 wortel, potong dadu kecil</li>
+                    <li>1/2 jagung manis, pipil</li>
+                    <li>Kacang polong secukupnya</li>
+                    <li>1 butir telur</li>
+                </ul>
+                <h4>👨‍🍳 Cara Membuat:</h4>
+                <ol>
+                    <li>Tumis semua sayuran</li>
+                    <li>Masukkan nasi, aduk rata</li>
+                    <li>Buat telur orak-arik, campurkan</li>
+                </ol>
+                <div class="modal-tip">💡 <strong>Tips:</strong> Warna-warni alami dari sayuran meningkatkan ketertarikan visual anak ASD.</div>
+            `
+        }
+    };
+
+    // Open modal
+    function openResep(id) {
+        const data = resepData[id];
+        if (!data) return;
+        
+        document.getElementById('modalBody').innerHTML = `
+            <h2>${data.title}</h2>
+            <div class="modal-tags">${data.tags}</div>
+            ${data.content}
+        `;
+        
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal(event) {
+        if (event && event.target !== document.getElementById('modalOverlay')) return;
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function logout() {
+        localStorage.removeItem('asd_nutrition_session');
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>

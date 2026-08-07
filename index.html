@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ASD Nutrition AI Care</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        
+        <!-- HEADER -->
+        <div class="auth-header">
+            <div class="logo-puzzle">🧩</div>
+            <h1>ASD Nutrition AI Care</h1>
+            <p>Edukasi & Monitoring Gizi Anak dengan Autism Spectrum Disorder</p>
+        </div>
+
+        <!-- TABS -->
+        <div class="auth-tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">🔑 Masuk</button>
+            <button class="tab-btn" onclick="switchTab('register')">✨ Daftar</button>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+            
+            <div class="form-group">
+                <label>📧 Email atau Nomor Telepon</label>
+                <input type="text" id="loginId" placeholder="contoh: bunda@email.com atau 08123456789" required autocomplete="email">
+            </div>
+            
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <input type="password" id="loginPassword" placeholder="Masukkan password" required minlength="6">
+                <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">👁️</button>
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe"> Ingat saya
+                </label>
+                <a href="#" class="forgot-password" onclick="alert('Fitur reset password akan segera hadir.')">Lupa password?</a>
+            </div>
+
+            <button type="submit" class="btn-auth" id="loginBtn">
+                <span class="btn-text">🔑 Masuk</span>
+                <span class="btn-loading">⏳ Memproses...</span>
+            </button>
+
+            <div id="loginMessage" class="message"></div>
+        </form>
+
+        <!-- FORM REGISTER -->
+        <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+            
+            <div class="form-group">
+                <label>👤 Nama Lengkap</label>
+                <input type="text" id="regNama" placeholder="Nama Ayah/Bunda" required>
+            </div>
+
+            <div class="form-group">
+                <label>📧 Email</label>
+                <input type="email" id="regEmail" placeholder="contoh@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>📱 Nomor Telepon (opsional)</label>
+                <input type="tel" id="regPhone" placeholder="08123456789">
+            </div>
+
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <input type="password" id="regPassword" placeholder="Minimal 6 karakter" required minlength="6">
+                <button type="button" class="toggle-password" onclick="togglePassword('regPassword')">👁️</button>
+            </div>
+
+            <div class="form-group">
+                <label>👶 Nama Anak</label>
+                <input type="text" id="regNamaAnak" placeholder="Nama si kecil">
+            </div>
+
+            <div class="form-group">
+                <label>📅 Tanggal Lahir Anak</label>
+                <input type="date" id="regTglLahir">
+            </div>
+
+            <div class="form-group">
+                <label>⚤ Jenis Kelamin Anak</label>
+                <select id="regJK">
+                    <option value="">Pilih...</option>
+                    <option value="Laki-laki">👦 Laki-laki</option>
+                    <option value="Perempuan">👧 Perempuan</option>
+                </select>
+            </div>
+
+            <div class="terms">
+                <label>
+                    <input type="checkbox" id="regTerms" required>
+                    <span>Saya setuju dengan <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a></span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-auth" id="registerBtn">
+                <span class="btn-text">✨ Daftar Sekarang</span>
+                <span class="btn-loading">⏳ Mendaftarkan...</span>
+            </button>
+
+            <div id="registerMessage" class="message"></div>
+        </form>
+
+        <!-- FOOTER -->
+        <div class="auth-footer">
+            <p>🔒 Data Anda aman dengan enkripsi</p>
+            <p>📞 Butuh bantuan? <a href="#">Hubungi Kami</a></p>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // URL API (SUDAH TERPASANG!)
+        // ============================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyBuXLReHkOVPHsONIhTI-LdXYp3rP0VInueTBW4-OGQe4g_kYvtAD1CAvgO3CZbyuj/exec';
+
+        // ============================================
+        // NAVIGASI TAB
+        // ============================================
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab-btn');
+
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+
+            document.getElementById('loginMessage').classList.remove('show');
+            document.getElementById('registerMessage').classList.remove('show');
+        }
+
+        // ============================================
+        // TOGGLE PASSWORD
+        // ============================================
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // ============================================
+        // TAMPILKAN PESAN
+        // ============================================
+        function showMessage(formType, type, message) {
+            const messageDiv = document.getElementById(formType + 'Message');
+            messageDiv.textContent = message;
+            messageDiv.className = 'message message-' + type + ' show';
+            
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // ============================================
+        // LOADING BUTTON
+        // ============================================
+        function setLoading(formType, isLoading) {
+            const btnId = formType === 'login' ? 'loginBtn' : 'registerBtn';
+            const btn = document.getElementById(btnId);
+            const btnText = btn.querySelector('.btn-text');
+            const btnLoading = btn.querySelector('.btn-loading');
+
+            if (isLoading) {
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline';
+                btn.disabled = true;
+            } else {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        // ============================================
+        // LOGIN
+        // ============================================
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const loginId = document.getElementById('loginId').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!loginId || !password) {
+                showMessage('login', 'error', 'Mohon isi email/telepon dan password');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('login', 'error', 'Password minimal 6 karakter');
+                return;
+            }
+
+            setLoading('login', true);
+            console.log('🔑 Mencoba login:', loginId);
+
+            try {
+                const url = API_URL + '?action=login&login_id=' + encodeURIComponent(loginId) + '&password=' + encodeURIComponent(password);
+                console.log('📤 URL:', url);
+
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log('📥 Response:', data);
+
+                if (data.success) {
+                    showMessage('login', 'success', '✅ Login berhasil! Mengalihkan...');
+                    
+                    const session = { ...data, timestamp: new Date().getTime() };
+                    localStorage.setItem('asd_nutrition_session', JSON.stringify(session));
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showMessage('login', 'error', '❌ ' + (data.message || 'Login gagal'));
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showMessage('login', 'error', '❌ Gagal terhubung ke server. Periksa koneksi internet.');
+            } finally {
+                setLoading('login', false);
+            }
+        }
+
+        // ============================================
+        // REGISTER
+        // ============================================
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            const data = {
+                nama: document.getElementById('regNama').value.trim(),
+                email: document.getElementById('regEmail').value.trim(),
+                phone: document.getElementById('regPhone').value.trim(),
+                password: document.getElementById('regPassword').value,
+                nama_anak: document.getElementById('regNamaAnak').value.trim(),
+                tgl_lahir_anak: document.getElementById('regTglLahir').value,
+                jk_anak: document.getElementById('regJK').value
+            };
+
+            if (!data.nama || !data.email || !data.password) {
+                showMessage('register', 'error', 'Nama, Email, dan Password wajib diisi');
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+                showMessage('register', 'error', 'Format email tidak valid');
+                return;
+            }
+
+            if (data.password.length < 6) {
+                showMessage('register', 'error', 'Password minimal 6 karakter');
+                return;
+            }
+
+            if (!document.getElementById('regTerms').checked) {
+                showMessage('register', 'error', 'Anda harus menyetujui Syarat & Ketentuan');
+                return;
+            }
+
+            setLoading('register', true);
+            console.log('📝 Mencoba registrasi:', data.email);
+
+            try {
+                const params = new URLSearchParams(data);
+                const url = API_URL + '?action=register&' + params.toString();
+                console.log('📤 URL:', url);
+
+                const response = await fetch(url);
+                const result = await response.json();
+                console.log('📥 Response:', result);
+
+                if (result.success) {
+                    showMessage('register', 'success', '✅ Registrasi berhasil! Silakan login.');
+                    document.getElementById('registerForm').reset();
+                    
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.getElementById('loginId').value = data.email;
+                    }, 2000);
+                } else {
+                    showMessage('register', 'error', '❌ ' + (result.message || 'Registrasi gagal'));
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showMessage('register', 'error', '❌ Gagal terhubung ke server.');
+            } finally {
+                setLoading('register', false);
+            }
+        }
+
+        // ============================================
+        // CEK SESSION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const session = localStorage.getItem('asd_nutrition_session');
+            if (session) {
+                try {
+                    const sessionData = JSON.parse(session);
+                    const now = new Date().getTime();
+                    if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        localStorage.removeItem('asd_nutrition_session');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('asd_nutrition_session');
+                }
+            }
+
+            console.log('✅ ASD Nutrition AI Care siap!');
+            console.log('🔗 API URL:', API_URL);
+        });
+    </script>
+</body>
+</html>

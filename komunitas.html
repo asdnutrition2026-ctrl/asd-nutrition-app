@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komunitas - ASD Nutrition AI Care</title>
+    <style>
+        *{box-sizing:border-box; margin:0; padding:0;}
+        body{
+            font-family:'Segoe UI', Roboto, -apple-system, sans-serif;
+            background:#eef1f5;
+            display:flex; justify-content:center; padding:24px 0;
+        }
+        .phone{
+            width:390px; max-width:100vw;
+            background:#ffffff;
+            border-radius:36px;
+            overflow:hidden;
+            box-shadow:0 20px 60px rgba(0,0,0,0.15);
+            padding-bottom:90px;
+            position:relative;
+            min-height:90vh;
+            max-height:850px;
+            display:flex; flex-direction:column;
+        }
+        .main-content{
+            flex:1; overflow-y:auto; padding:20px; padding-bottom:80px;
+        }
+        .page-header{
+            display:flex; align-items:center; gap:12px; margin-bottom:20px;
+        }
+        .back-btn{
+            width:40px; height:40px; border-radius:50%;
+            background:#f3f4f6; display:flex; align-items:center; justify-content:center;
+            cursor:pointer; border:none; font-size:18px; text-decoration:none; color:#1f2937;
+        }
+        .page-title{ font-size:22px; color:#12224a; font-weight:700; }
+
+        /* Post baru */
+        .new-post-card{
+            background:#f9fafb; border-radius:16px; padding:14px;
+            display:flex; gap:10px; align-items:center; margin-bottom:20px;
+            cursor:pointer; border:1px dashed #cbd5e1;
+        }
+        .new-post-card:hover{ border-color:#3b5bdb; background:#e8edff; }
+        .new-post-avatar{
+            width:44px; height:44px; border-radius:50%;
+            background:#d1d5db; display:flex; align-items:center; justify-content:center;
+            font-size:20px; flex-shrink:0;
+        }
+        .new-post-text{ color:#9ca3af; font-size:13px; }
+
+        /* Postingan */
+        .post-list{ display:flex; flex-direction:column; gap:16px; }
+
+        .post-card{
+            background:#fff; border-radius:16px; padding:16px;
+            border:1px solid #e5e7eb;
+        }
+        .post-header{
+            display:flex; align-items:center; gap:10px; margin-bottom:10px;
+        }
+        .post-avatar{
+            width:40px; height:40px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:18px; flex-shrink:0;
+        }
+        .post-avatar.p1{ background:#e8f7ec; }
+        .post-avatar.p2{ background:#eaf2fb; }
+        .post-avatar.p3{ background:#fdf3e3; }
+        .post-avatar.p4{ background:#f2edfb; }
+        .post-user{ font-size:13px; font-weight:700; color:#12224a; }
+        .post-time{ font-size:11px; color:#9ca3af; }
+        .post-content{ font-size:13px; color:#1f2937; line-height:1.6; margin-bottom:10px; }
+        .post-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+        .post-tag{
+            font-size:10px; padding:4px 10px; border-radius:12px;
+            font-weight:600; background:#e8f7ec; color:#4caf50;
+        }
+        .post-tag.tanya{ background:#fef3c7; color:#92400e; }
+        .post-tag.tips{ background:#e8edff; color:#3b5bdb; }
+        .post-actions{
+            display:flex; gap:16px; padding-top:10px; border-top:1px solid #f3f4f6;
+        }
+        .post-action{
+            display:flex; align-items:center; gap:4px;
+            font-size:12px; color:#9ca3af; cursor:pointer;
+            border:none; background:none; font-family:inherit;
+        }
+        .post-action:hover{ color:#3b5bdb; }
+
+        /* Bottom nav */
+        .bottomnav{
+            position:absolute; bottom:0; left:0; right:0;
+            background:#fff; border-top:1px solid #eef0f3;
+            display:flex; justify-content:space-around; align-items:center;
+            padding:10px 6px 18px 6px;
+        }
+        .nav-item{
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            font-size:10.5px; color:#9aa2b1; font-weight:600; cursor:pointer;
+            border:none; background:none; text-decoration:none;
+        }
+        .nav-item.active{ color:#3b5bdb; }
+        .nav-item .navic{ font-size:18px; }
+        .nav-item.fab .navic{
+            width:46px; height:46px; border-radius:50%;
+            background:#3b5bdb; color:#fff; display:flex; align-items:center; justify-content:center;
+            font-size:22px; margin-top:-26px; box-shadow:0 8px 16px rgba(59,91,219,0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone">
+    <div class="main-content">
+        
+        <!-- HEADER -->
+        <div class="page-header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1 class="page-title">👥 Komunitas</h1>
+        </div>
+
+        <!-- NEW POST -->
+        <div class="new-post-card" onclick="newPost()">
+            <div class="new-post-avatar">✏️</div>
+            <div class="new-post-text">Bagikan pengalaman atau tanya ke sesama orang tua...</div>
+        </div>
+
+        <!-- POSTINGAN -->
+        <div class="post-list">
+            
+            <!-- Post 1 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-avatar p1">👩</div>
+                    <div>
+                        <div class="post-user">Bunda Rina</div>
+                        <div class="post-time">2 jam yang lalu</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Akhirnya anak saya (5 tahun) mau makan telur setelah 3 bulan mencoba! Kuncinya: telur dadar tipis dipotong bentuk bintang pakai cetakan. Jangan menyerah ya bunda-bunda! 💪
+                </div>
+                <div class="post-tags">
+                    <span class="post-tag tips">💡 Tips</span>
+                    <span class="post-tag">🥚 Telur</span>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action">❤️ 24</button>
+                    <button class="post-action">💬 8 Komentar</button>
+                    <button class="post-action">🔖 Simpan</button>
+                </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-avatar p2">👨</div>
+                    <div>
+                        <div class="post-user">Ayah Dito</div>
+                        <div class="post-time">5 jam yang lalu</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Ada yang punya rekomendasi dokter gizi anak yang paham ASD di daerah Jakarta Selatan? Anak saya susah banget makan sayur dan buah. Hb-nya rendah. Butuh bantuan 😔
+                </div>
+                <div class="post-tags">
+                    <span class="post-tag tanya">❓ Tanya</span>
+                    <span class="post-tag">🩸 Anemia</span>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action">❤️ 15</button>
+                    <button class="post-action">💬 12 Komentar</button>
+                    <button class="post-action">🔖 Simpan</button>
+                </div>
+            </div>
+
+            <!-- Post 3 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-avatar p3">👩</div>
+                    <div>
+                        <div class="post-user">Mama Salsa</div>
+                        <div class="post-time">1 hari yang lalu</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Sharing resep favorit anakku: Nugget Tahu Wortel! Teksturnya renyah di luar, lembut di dalam. Wortel diparut halus jadi tidak ketahuan. Anakku yang biasanya tolak sayur, sekarang malah minta nambah! 🎉
+                </div>
+                <div class="post-tags">
+                    <span class="post-tag tips">💡 Tips</span>
+                    <span class="post-tag">👨‍🍳 Resep</span>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action">❤️ 42</button>
+                    <button class="post-action">💬 15 Komentar</button>
+                    <button class="post-action">🔖 Simpan</button>
+                </div>
+            </div>
+
+            <!-- Post 4 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-avatar p4">👩</div>
+                    <div>
+                        <div class="post-user">Bunda Anya</div>
+                        <div class="post-time">2 hari yang lalu</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    Anakku dulu cuma mau makan 3 jenis makanan. Sekarang sudah bisa 7 jenis! Perubahan terjadi setelah saya terapkan food chaining. Mulai dari makanan favorit, pelan-pelan tambah variasi yang mirip. Semangat para orang tua hebat! ❤️
+                </div>
+                <div class="post-tags">
+                    <span class="post-tag tips">💡 Tips</span>
+                    <span class="post-tag">🧠 Food Chaining</span>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action">❤️ 56</button>
+                    <button class="post-action">💬 20 Komentar</button>
+                    <button class="post-action">🔖 Simpan</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottomnav">
+        <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
+        <a href="history.html" class="nav-item"><div class="navic">📊</div>Riwayat</a>
+        <a href="monitoring.html" class="nav-item fab"><div class="navic">+</div></a>
+        <a href="konsultasi.html" class="nav-item"><div class="navic">💬</div>Pesan</a>
+        <a href="komunitas.html" class="nav-item active"><div class="navic">👥</div>Komunitas</a>
+    </div>
+</div>
+
+<script>
+    const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
+    if (!session.userId) { window.location.href = 'index.html'; }
+
+    function newPost() {
+        alert('📝 Fitur buat postingan baru akan segera hadir!\n\nUntuk saat ini, Anda bisa membaca pengalaman orang tua lain atau konsultasi via menu 💬 Konsultasi.');
+    }
+
+    function logout() {
+        localStorage.removeItem('asd_nutrition_session');
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>

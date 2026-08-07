@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edukasi Gizi - ASD Nutrition AI Care</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary: #3b5bdb;
+            --navy: #12224a;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border: #e5e7eb;
+            --white: #ffffff;
+            --bg: #eef1f5;
+            --green: #e8f7ec;
+            --blue: #eaf2fb;
+            --orange: #fdf3e3;
+            --purple: #f2edfb;
+            --pink: #fdeaf1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px 0;
+            margin: 0;
+        }
+
+        .phone {
+            width: 390px;
+            max-width: 100vw;
+            background: var(--white);
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative;
+            height: 90vh;
+            max-height: 850px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            padding-bottom: 12px;
+            z-index: 10;
+        }
+
+        .back-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .page-title { font-size: 22px; color: var(--navy); font-weight: 700; }
+
+        /* Search */
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .search-box span { font-size: 18px; }
+
+        /* Kategori */
+        .category-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .cat-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--text-gray);
+            transition: all 0.2s;
+        }
+
+        .cat-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .cat-chip:hover {
+            border-color: var(--primary);
+        }
+
+        /* Featured */
+        .featured-card {
+            background: linear-gradient(135deg, #eaf2ff, #f4eefd);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .featured-card h3 {
+            font-size: 16px;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .featured-card p {
+            font-size: 12px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        /* List artikel */
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .article-card {
+            display: flex;
+            gap: 12px;
+            padding: 14px;
+            background: #f9fafb;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .article-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateX(2px);
+        }
+
+        .article-icon {
+            width: 50px; height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .article-icon.sensori { background: #e8f7ec; }
+        .article-icon.gizi { background: #eaf2fb; }
+        .article-icon.tips { background: #fdf3e3; }
+        .article-icon.anemia { background: #fee2e2; }
+        .article-icon.stunting { background: #f2edfb; }
+
+        .article-info h4 {
+            font-size: 14px;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .article-info p {
+            font-size: 11px;
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+            font-size: 10px;
+            color: var(--text-gray);
+        }
+
+        .read-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 390px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .modal-content h2 {
+            font-size: 20px;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .modal-content .modal-meta {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-bottom: 16px;
+        }
+
+        .modal-content p {
+            font-size: 13px;
+            color: var(--text-dark);
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .modal-content li {
+            font-size: 13px;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .modal-tip {
+            background: #fef3c7;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #92400e;
+            margin-top: 16px;
+        }
+
+        /* Bottom nav */
+        .bottomnav {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: white;
+            border-top: 1px solid #eef0f3;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 6px 18px 6px;
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 10.5px;
+            color: #9aa2b1;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .nav-item.active { color: var(--primary); }
+        .nav-item .navic { font-size: 18px; }
+
+        @media (max-width: 420px) {
+            .phone { border-radius: 0; height: 100vh; max-height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone">
+        <div class="main-content">
+            
+            <!-- HEADER -->
+            <div class="page-header">
+                <a href="dashboard.html" class="back-btn">←</a>
+                <h1 class="page-title">📖 Edukasi Gizi</h1>
+            </div>
+
+            <!-- SEARCH -->
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Cari materi edukasi..." oninput="filterArticles()">
+            </div>
+
+            <!-- KATEGORI -->
+            <div class="category-scroll" id="categoryScroll">
+                <button class="cat-chip active" onclick="filterCategory('semua', this)">📚 Semua</button>
+                <button class="cat-chip" onclick="filterCategory('sensori', this)">🧠 Sensori</button>
+                <button class="cat-chip" onclick="filterCategory('gizi', this)">🥗 Gizi</button>
+                <button class="cat-chip" onclick="filterCategory('anemia', this)">🩸 Anemia</button>
+                <button class="cat-chip" onclick="filterCategory('stunting', this)">📏 Stunting</button>
+                <button class="cat-chip" onclick="filterCategory('tips', this)">💡 Tips</button>
+            </div>
+
+            <!-- FEATURED -->
+            <div class="featured-card" onclick="openArticle('sensori1')">
+                <div class="featured-badge">⭐ POPULER</div>
+                <h3>🧠 Memahami Food Selectivity pada Anak ASD</h3>
+                <p>Kenapa si kecil pilih-pilih makanan? Pahami penyebab sensori dan cara mengatasinya.</p>
+            </div>
+
+            <!-- LIST ARTIKEL -->
+            <div class="article-list" id="articleList">
+                
+                <div class="article-card" data-category="sensori" onclick="openArticle('sensori1')">
+                    <div class="article-icon sensori">🧠</div>
+                    <div class="article-info">
+                        <h4>Food Selectivity & Gangguan Sensori</h4>
+                        <p>Memahami mengapa anak ASD menolak makanan tertentu</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 5 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="sensori" onclick="openArticle('sensori2')">
+                    <div class="article-icon sensori">👅</div>
+                    <div class="article-info">
+                        <h4>Food Chaining: Strategi Perkenalan Makanan Baru</h4>
+                        <p>Teknik rantai makanan untuk anak dengan selektivitas tinggi</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 7 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="gizi" onclick="openArticle('gizi1')">
+                    <div class="article-icon gizi">🥗</div>
+                    <div class="article-info">
+                        <h4>9 Kelompok Pangan untuk Tumbuh Kembang Optimal</h4>
+                        <p>Panduan keragaman pangan berdasarkan standar WHO</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 4 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="gizi" onclick="openArticle('gizi2')">
+                    <div class="article-icon gizi">🥩</div>
+                    <div class="article-info">
+                        <h4>Pentingnya Protein Hewani untuk Anak ASD</h4>
+                        <p>Sumber protein yang ramah untuk anak dengan food selectivity</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 5 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="anemia" onclick="openArticle('anemia1')">
+                    <div class="article-icon anemia">🩸</div>
+                    <div class="article-info">
+                        <h4>Mencegah Anemia pada Anak ASD</h4>
+                        <p>Prevalensi anemia 15-60% pada anak ASD. Kenali tandanya.</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 6 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="stunting" onclick="openArticle('stunting1')">
+                    <div class="article-icon stunting">📏</div>
+                    <div class="article-info">
+                        <h4>Risiko Stunting 4x Lebih Tinggi pada Anak ASD</h4>
+                        <p>Mengapa anak ASD berisiko stunting dan bagaimana mencegahnya</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 5 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="tips" onclick="openArticle('tips1')">
+                    <div class="article-icon tips">💡</div>
+                    <div class="article-info">
+                        <h4>Tips Membuat Menu Ramah Sensori</h4>
+                        <p>Ide kreatif menyajikan makanan sesuai preferensi tekstur anak</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 8 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-card" data-category="tips" onclick="openArticle('tips2')">
+                    <div class="article-icon tips">🍽️</div>
+                    <div class="article-info">
+                        <h4>Hidden Veggies: Menyembunyikan Sayur dalam Makanan</h4>
+                        <p>Teknik menyembunyikan sayuran untuk anak yang tidak suka sayur</p>
+                        <div class="article-meta">
+                            <span class="read-time">⏱️ 6 menit</span>
+                            <span>📅 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+            <div class="modal-content" id="modalContent" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">✕</button>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottomnav">
+            <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
+            <a href="history.html" class="nav-item"><div class="navic">📊</div>Riwayat</a>
+            <a href="monitoring.html" class="nav-item"><div class="navic">➕</div>Input</a>
+            <a href="edukasi.html" class="nav-item active"><div class="navic">📖</div>Edukasi</a>
+            <a href="#" class="nav-item" onclick="logout()"><div class="navic">👤</div>Profil</a>
+        </div>
+    </div>
+
+    <script>
+        // Session check
+        const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
+        if (!session.userId) { window.location.href = 'index.html'; }
+
+        // ============================================
+        // DATA ARTIKEL
+        // ============================================
+        const articles = {
+            'sensori1': {
+                title: '🧠 Memahami Food Selectivity pada Anak ASD',
+                meta: 'Kategori: Sensori • ⏱️ 5 menit',
+                content: `
+                    <p><strong>Food selectivity</strong> atau pilih-pilih makanan adalah kondisi yang sangat umum pada anak dengan Autism Spectrum Disorder (ASD). Penelitian menunjukkan <strong>46-89% anak ASD</strong> mengalami food selectivity.</p>
+                    
+                    <h3>🔍 Penyebab Utama:</h3>
+                    <ul>
+                        <li><strong>Gangguan Sensori:</strong> Anak ASD memiliki sensitivitas berbeda terhadap tekstur, rasa, bau, suhu, dan tampilan makanan.</li>
+                        <li><strong>Rutinitas Kaku:</strong> Keinginan untuk melakukan hal yang sama (sameness) membuat anak enggan mencoba makanan baru.</li>
+                        <li><strong>Gangguan Oral Motor:</strong> Kesulitan mengunyah atau menelan makanan tertentu.</li>
+                    </ul>
+
+                    <h3>⚠️ Dampak Food Selectivity:</h3>
+                    <ul>
+                        <li>Kekurangan gizi mikro dan makro</li>
+                        <li>Risiko stunting 4x lebih tinggi</li>
+                        <li>Prevalensi anemia 15-60%</li>
+                        <li>Stres pada orang tua dan keluarga</li>
+                    </ul>
+
+                    <div class="modal-tip">
+                        💡 <strong>Pesan Penting:</strong> Food selectivity BUKAN kesalahan pola asuh. Ini adalah bagian dari kondisi ASD yang memerlukan strategi khusus.
+                    </div>
+                `
+            },
+            'sensori2': {
+                title: '👅 Food Chaining: Strategi Perkenalan Makanan Baru',
+                meta: 'Kategori: Sensori • ⏱️ 7 menit',
+                content: `
+                    <p><strong>Food chaining</strong> adalah teknik memperkenalkan makanan baru secara bertahap dengan "merantai" dari makanan yang sudah disukai anak.</p>
+
+                    <h3>📝 Langkah-langkah Food Chaining:</h3>
+                    <ol>
+                        <li><strong>Identifikasi Makanan Favorit:</strong> Catat makanan yang selalu diterima anak (rasa, tekstur, suhu, warna).</li>
+                        <li><strong>Buat Rantai:</strong> Pilih makanan baru yang MIRIP dengan makanan favorit.</li>
+                        <li><strong>Perkenalan Bertahap:</strong> Butuh 10-15 kali percobaan sebelum anak menerima.</li>
+                        <li><strong>Jangan Memaksa:</strong> Biarkan anak eksplorasi dengan semua indera.</li>
+                    </ol>
+
+                    <h3>🔗 Contoh Rantai Makanan:</h3>
+                    <p>🍟 Kentang goreng → 🥔 Kentang wedges → 🥔 Kentang panggang → 🍠 Ubi goreng</p>
+                    <p>🍗 Nugget ayam → 🍗 Ayam goreng tepung → 🍗 Ayam panggang → 🐟 Nugget ikan</p>
+
+                    <div class="modal-tip">
+                        💡 <strong>Tips:</strong> Libatkan anak dalam proses memilih dan menyiapkan makanan. Ini meningkatkan ketertarikan mereka.
+                    </div>
+                `
+            },
+            'gizi1': {
+                title: '🥗 9 Kelompok Pangan untuk Tumbuh Kembang Optimal',
+                meta: 'Kategori: Gizi • ⏱️ 4 menit',
+                content: `
+                    <p>Berdasarkan standar WHO, ada <strong>9 kelompok pangan</strong> yang perlu dikonsumsi anak untuk tumbuh kembang optimal:</p>
+                    <ol>
+                        <li>🌾 <strong>Serealia:</strong> Nasi, roti, mie, jagung</li>
+                        <li>🥔 <strong>Umbi-umbian:</strong> Kentang, ubi, singkong</li>
+                        <li>🥬 <strong>Sayuran:</strong> Bayam, wortel, brokoli</li>
+                        <li>🍎 <strong>Buah-buahan:</strong> Apel, pisang, jeruk</li>
+                        <li>🥩 <strong>Daging & unggas:</strong> Ayam, sapi</li>
+                        <li>🥚 <strong>Telur:</strong> Telur ayam, bebek</li>
+                        <li>🐟 <strong>Ikan & seafood:</strong> Ikan, udang</li>
+                        <li>🥜 <strong>Kacang-kacangan:</strong> Tahu, tempe, kacang</li>
+                        <li>🥛 <strong>Susu & olahan:</strong> Susu, keju, yogurt</li>
+                    </ol>
+                    <p>Skor IDDS (Individual Dietary Diversity Score) dihitung dari berapa kelompok yang dikonsumsi dalam 24 jam.</p>
+                `
+            },
+            'gizi2': {
+                title: '🥩 Pentingnya Protein Hewani untuk Anak ASD',
+                meta: 'Kategori: Gizi • ⏱️ 5 menit',
+                content: `
+                    <p>Protein hewani mengandung <strong>asam amino esensial lengkap</strong> dan zat besi yang mudah diserap tubuh.</p>
+                    <h3>🩸 Hubungan dengan Anemia:</h3>
+                    <p>Anak ASD sering menolak daging karena tekstur dan bau. Akibatnya, asupan zat besi rendah → anemia.</p>
+                    <h3>💡 Sumber Protein Ramah ASD:</h3>
+                    <ul>
+                        <li>Telur (tekstur lembut, rasa netral)</li>
+                        <li>Tahu & tempe (bisa diolah crispy)</li>
+                        <li>Nugget homemade (bisa disembunyikan sayuran)</li>
+                        <li>Ikan tanpa duri (fillet)</li>
+                    </ul>
+                `
+            },
+            'anemia1': {
+                title: '🩸 Mencegah Anemia pada Anak ASD',
+                meta: 'Kategori: Anemia • ⏱️ 6 menit',
+                content: `
+                    <p>Prevalensi anemia pada anak ASD mencapai <strong>15,6% - 60,5%</strong>. Angka ini jauh lebih tinggi dibanding anak tipikal.</p>
+                    <h3>🔍 Tanda-tanda Anemia:</h3>
+                    <ul>
+                        <li>Mudah lelah dan lesu</li>
+                        <li>Pucat (telapak tangan, kelopak mata)</li>
+                        <li>Konsentrasi menurun</li>
+                        <li>Nafsu makan buruk</li>
+                    </ul>
+                    <h3>🥩 Sumber Zat Besi:</h3>
+                    <ul>
+                        <li>Hati ayam (zat besi tinggi)</li>
+                        <li>Daging merah tanpa lemak</li>
+                        <li>Bayam + vitamin C (jeruk) untuk penyerapan</li>
+                    </ul>
+                `
+            },
+            'stunting1': {
+                title: '📏 Risiko Stunting 4x Lebih Tinggi pada Anak ASD',
+                meta: 'Kategori: Stunting • ⏱️ 5 menit',
+                content: `
+                    <p>Anak ASD berisiko stunting <strong>4 kali lipat</strong> dibanding anak tipikal akibat food selectivity yang membatasi asupan gizi.</p>
+                    <h3>📊 Data Penting:</h3>
+                    <ul>
+                        <li>Stunting = tinggi badan di bawah standar WHO</li>
+                        <li>Disebabkan kekurangan gizi kronis</li>
+                        <li>Berdampak pada perkembangan otak</li>
+                    </ul>
+                    <h3>🛡️ Pencegahan:</h3>
+                    <ul>
+                        <li>Monitoring rutin BB & TB</li>
+                        <li>Pastikan asupan protein cukup</li>
+                        <li>Konsultasi rutin dengan ahli gizi</li>
+                    </ul>
+                `
+            },
+            'tips1': {
+                title: '💡 Tips Membuat Menu Ramah Sensori',
+                meta: 'Kategori: Tips • ⏱️ 8 menit',
+                content: `
+                    <h3>🍟 Untuk yang Suka Renyah:</h3>
+                    <ul>
+                        <li>Nugget sayur homemade</li>
+                        <li>Tempe goreng tepung crispy</li>
+                        <li>Keripik sayur (wortel, kale)</li>
+                    </ul>
+                    <h3>🍦 Untuk yang Suka Lembut:</h3>
+                    <ul>
+                        <li>Sup krim (bisa disembunyikan sayuran)</li>
+                        <li>Smoothies buah + yogurt</li>
+                        <li>Bubur dengan puree sayur</li>
+                    </ul>
+                    <h3>🎨 Tips Presentasi:</h3>
+                    <ul>
+                        <li>Gunakan piring bersekat</li>
+                        <li>Bentuk makanan lucu (cetakan)</li>
+                        <li>Warna-warni alami dari sayuran</li>
+                    </ul>
+                `
+            },
+            'tips2': {
+                title: '🍽️ Hidden Veggies: Menyembunyikan Sayur dalam Makanan',
+                meta: 'Kategori: Tips • ⏱️ 6 menit',
+                content: `
+                    <p>Teknik "hidden veggies" membantu anak mendapatkan nutrisi sayuran tanpa merasa makan sayur.</p>
+                    <h3>🥫 Ide Hidden Veggies:</h3>
+                    <ul>
+                        <li>Puree wortel dalam saus pasta</li>
+                        <li>Bayam halus dalam adonan pancake hijau</li>
+                        <li>Labu kuning dalam muffin</li>
+                        <li>Brokoli cincang dalam nugget</li>
+                    </ul>
+                    <div class="modal-tip">
+                        ⚠️ <strong>Catatan:</strong> Hidden veggies adalah strategi SEMENTARA. Tetap perkenalkan sayuran asli secara bertahap.
+                    </div>
+                `
+            }
+        };
+
+        // ============================================
+        // FILTER KATEGORI
+        // ============================================
+        let currentCategory = 'semua';
+
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            
+            // Update chip
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Filter artikel
+            document.querySelectorAll('.article-card').forEach(card => {
+                if (cat === 'semua' || card.dataset.category === cat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // ============================================
+        // SEARCH
+        // ============================================
+        function filterArticles() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            document.querySelectorAll('.article-card').forEach(card => {
+                const title = card.querySelector('h4').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(query) || desc.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // ============================================
+        // MODAL ARTIKEL
+        // ============================================
+        function openArticle(id) {
+            const article = articles[id];
+            if (!article) return;
+            
+            document.getElementById('modalBody').innerHTML = `
+                <h2>${article.title}</h2>
+                <p class="modal-meta">${article.meta}</p>
+                ${article.content}
+            `;
+            
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== document.getElementById('modalOverlay')) return;
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        function logout() {
+            localStorage.removeItem('asd_nutrition_session');
+            window.location.href = 'index.html';
+        }
+
+        console.log('✅ Edukasi page ready');
+    </script>
+</body>
+</html>

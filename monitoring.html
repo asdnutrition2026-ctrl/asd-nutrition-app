@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Monitoring - ASD Nutrition AI Care</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary: #3b5bdb;
+            --navy: #12224a;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border: #e5e7eb;
+            --white: #ffffff;
+            --bg: #eef1f5;
+            --radius-sm: 12px;
+            --green: #d1fae5;
+            --green-text: #065f46;
+            --red: #fee2e2;
+            --red-text: #991b1b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px 0;
+            margin: 0;
+        }
+
+        .phone {
+            width: 390px;
+            max-width: 100vw;
+            background: var(--white);
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative;
+            height: 90vh;
+            max-height: 850px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .page-title { font-size: 22px; color: var(--navy); font-weight: 700; }
+
+        .alert {
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.show { display: flex; align-items: center; gap: 8px; }
+        .alert-success { background: var(--green); color: var(--green-text); }
+        .alert-error { background: var(--red); color: var(--red-text); }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            background: #f9fafb;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
+        }
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .food-groups h3 { font-size: 14px; color: var(--navy); margin-bottom: 12px; }
+        .food-groups p { font-size: 11px; color: var(--text-gray); margin-bottom: 12px; }
+
+        .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        .food-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #f9fafb;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .food-item.selected {
+            border-color: #4caf50;
+            background: #e8f7ec;
+        }
+
+        .food-item input { display: none; }
+        .food-emoji { font-size: 20px; }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b5bdb, #4f6ef2);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .bottomnav {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: white;
+            border-top: 1px solid #eef0f3;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 6px 18px 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 10.5px;
+            color: #9aa2b1;
+            text-decoration: none;
+        }
+
+        .nav-item.active { color: var(--primary); }
+        .nav-item .navic { font-size: 18px; }
+
+        @media (max-width: 420px) {
+            .phone { border-radius: 0; height: 100vh; max-height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone">
+        <div class="main-content">
+            
+            <div class="page-header">
+                <a href="dashboard.html" class="back-btn">←</a>
+                <h1 class="page-title">📋 Input Monitoring Harian</h1>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <form id="monitoringForm" onsubmit="saveData(event)">
+                
+                <div class="form-group">
+                    <label>📅 Tanggal Pencatatan</label>
+                    <input type="date" id="tglCatat" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>⚖️ Berat Badan (kg)</label>
+                        <input type="number" id="beratBadan" placeholder="22.5" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Tinggi Badan (cm)</label>
+                        <input type="number" id="tinggiBadan" placeholder="118" step="0.1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>🩸 Hemoglobin / Hb (g/dL) - Opsional</label>
+                    <input type="number" id="hemoglobin" placeholder="12.5" step="0.1">
+                </div>
+
+                <div class="food-groups">
+                    <h3>🍽️ Keragaman Pangan Hari Ini</h3>
+                    <p>Centang kelompok pangan yang dikonsumsi si kecil</p>
+                    <div class="food-grid" id="foodGrid">
+                        <label class="food-item"><input type="checkbox" class="food-check" value="1"><span class="food-emoji">🌾</span> Serealia</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="2"><span class="food-emoji">🥔</span> Umbi-umbian</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="3"><span class="food-emoji">🥬</span> Sayuran</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="4"><span class="food-emoji">🍎</span> Buah-buahan</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="5"><span class="food-emoji">🥩</span> Daging & unggas</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="6"><span class="food-emoji">🥚</span> Telur</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="7"><span class="food-emoji">🐟</span> Ikan & seafood</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="8"><span class="food-emoji">🥜</span> Kacang-kacangan</label>
+                        <label class="food-item"><input type="checkbox" class="food-check" value="9"><span class="food-emoji">🥛</span> Susu & olahan</label>
+                    </div>
+                    <p style="font-size:12px; margin-top:8px;">Skor: <strong id="skorIDDS">0</strong>/9</p>
+                </div>
+
+                <div class="form-group">
+                    <label>✅ Makanan yang Diterima</label>
+                    <textarea id="makananDiterima" placeholder="Contoh: nasi putih, ayam goreng, tahu" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>❌ Makanan yang Ditolak</label>
+                    <textarea id="makananDitolak" placeholder="Contoh: sayur bayam, buah apel" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>📝 Catatan Sensori</label>
+                    <textarea id="catatanSensori" placeholder="Contoh: suka tekstur renyah, tidak suka lembek" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnSimpan">💾 Simpan Data Monitoring</button>
+            </form>
+        </div>
+
+        <div class="bottomnav">
+            <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
+            <a href="#" class="nav-item"><div class="navic">📊</div>Riwayat</a>
+            <a href="monitoring.html" class="nav-item active"><div class="navic">➕</div>Input</a>
+            <a href="#" class="nav-item"><div class="navic">💬</div>Pesan</a>
+            <a href="#" class="nav-item" onclick="logout()"><div class="navic">👤</div>Profil</a>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // URL API (SUDAH TERPASANG!)
+        // ============================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyBuXLReHkOVPHsONIhTI-LdXYp3rP0VInueTBW4-OGQe4g_kYvtAD1CAvgO3CZbyuj/exec';
+
+        // ============================================
+        // CEK SESSION
+        // ============================================
+        const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
+        if (!session.userId) {
+            window.location.href = 'index.html';
+        }
+
+        // Set tanggal hari ini
+        document.getElementById('tglCatat').valueAsDate = new Date();
+
+        // Hitung skor IDDS
+        document.querySelectorAll('.food-check').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.parentElement.classList.add('selected');
+                } else {
+                    this.parentElement.classList.remove('selected');
+                }
+                const checked = document.querySelectorAll('.food-check:checked').length;
+                document.getElementById('skorIDDS').textContent = checked;
+            });
+        });
+
+        // ============================================
+        // SIMPAN DATA
+        // ============================================
+        async function saveData(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('btnSimpan');
+            const alertBox = document.getElementById('alertBox');
+            
+            const data = {
+                action: 'saveMonitoring',
+                userId: session.userId,
+                token: session.token || '',
+                tgl_catat: document.getElementById('tglCatat').value,
+                berat_badan: document.getElementById('beratBadan').value,
+                tinggi_badan: document.getElementById('tinggiBadan').value,
+                hb: document.getElementById('hemoglobin').value || '0',
+                skor_idds: document.querySelectorAll('.food-check:checked').length,
+                makanan_diterima: document.getElementById('makananDiterima').value,
+                makanan_ditolak: document.getElementById('makananDitolak').value,
+                catatan_sensori: document.getElementById('catatanSensori').value
+            };
+
+            if (!data.berat_badan || !data.tinggi_badan) {
+                showAlert('error', '❌ Berat Badan dan Tinggi Badan wajib diisi!');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ Menyimpan...';
+            hideAlert();
+
+            try {
+                const params = new URLSearchParams(data).toString();
+                const url = API_URL + '?' + params;
+                console.log('📤 Simpan ke:', url);
+
+                const response = await fetch(url);
+                const result = await response.json();
+                console.log('📥 Response:', result);
+
+                if (result.success) {
+                    showAlert('success', '✅ Data berhasil disimpan!');
+                    document.getElementById('monitoringForm').reset();
+                    document.getElementById('tglCatat').valueAsDate = new Date();
+                    document.querySelectorAll('.food-item').forEach(el => el.classList.remove('selected'));
+                    document.getElementById('skorIDDS').textContent = '0';
+                    document.querySelector('.main-content').scrollTop = 0;
+                } else {
+                    showAlert('error', '❌ ' + (result.message || 'Gagal menyimpan'));
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showAlert('error', '⚠️ Gagal terhubung. Data disimpan di lokal.');
+                // Simpan ke localStorage
+                let local = JSON.parse(localStorage.getItem('monitoring_local') || '[]');
+                local.push({ ...data, timestamp: new Date().toISOString() });
+                localStorage.setItem('monitoring_local', JSON.stringify(local));
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '💾 Simpan Data Monitoring';
+            }
+        }
+
+        function showAlert(type, message) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = 'alert alert-' + type + ' show';
+        }
+
+        function hideAlert() {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = 'alert';
+        }
+
+        function logout() {
+            localStorage.removeItem('asd_nutrition_session');
+            window.location.href = 'index.html';
+        }
+
+        console.log('✅ Monitoring page ready');
+    </script>
+</body>
+</html>
