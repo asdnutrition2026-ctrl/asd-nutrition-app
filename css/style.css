@@ -1,0 +1,732 @@
+/* ============================================ */
+/* ASD NUTRITION AI CARE - MAIN STYLESHEET      */
+/* ============================================ */
+
+/* ============================================ */
+/* CSS VARIABLES (WARNA & UKURAN)               */
+/* ============================================ */
+:root {
+    /* Warna Utama */
+    --primary: #3b5bdb;
+    --primary-dark: #2b4bc7;
+    --primary-light: #e8edff;
+    
+    /* Warna Status */
+    --green: #e8f7ec;
+    --green-ic: #4caf50;
+    --blue: #eaf2fb;
+    --blue-ic: #3b82f6;
+    --orange: #fdf3e3;
+    --orange-ic: #f5a623;
+    --purple: #f2edfb;
+    --purple-ic: #8b5cf6;
+    --pink: #fdeaf1;
+    --pink-ic: #ec4899;
+    --teal: #e6f7f5;
+    --teal-ic: #14b8a6;
+    --red: #fee2e2;
+    --red-ic: #ef4444;
+    
+    /* Warna Netral */
+    --navy: #12224a;
+    --text-dark: #1f2937;
+    --text-gray: #6b7280;
+    --text-light: #9ca3af;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    
+    /* Background */
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Radius */
+    --radius-xs: 8px;
+    --radius-sm: 12px;
+    --radius: 18px;
+    --radius-lg: 24px;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+    --shadow-primary: 0 8px 20px rgba(59, 91, 219, 0.4);
+}
+
+/* ============================================ */
+/* RESET & BASE STYLES                          */
+/* ============================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 0;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================ */
+/* AUTH CONTAINER (Kartu Login)                 */
+/* ============================================ */
+.auth-container {
+    width: 100%;
+    max-width: 440px;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Garis dekoratif di atas kartu */
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4caf50, #f5a623, #3b82f6, #ec4899);
+}
+
+/* ============================================ */
+/* ANIMATIONS                                   */
+/* ============================================ */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes rotatePuzzle {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+/* ============================================ */
+/* AUTH HEADER                                  */
+/* ============================================ */
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.logo-puzzle {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: conic-gradient(from 90deg, #4caf50, #f5a623, #3b82f6, #ec4899, #4caf50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+    animation: rotatePuzzle 4s linear infinite;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.logo-puzzle:hover {
+    animation-play-state: paused;
+    transform: scale(1.1);
+}
+
+.auth-header h1 {
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 8px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.auth-header p {
+    color: var(--text-gray);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* ============================================ */
+/* AUTH TABS                                    */
+/* ============================================ */
+.auth-tabs {
+    display: flex;
+    margin-bottom: 28px;
+    background: #f3f4f6;
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    gap: 4px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-gray);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.tab-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: var(--primary);
+    transition: all 0.5s ease;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 0;
+}
+
+.tab-btn:hover::before {
+    width: 300px;
+    height: 300px;
+    opacity: 0.05;
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-btn:hover:not(.active) {
+    color: var(--text-dark);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================ */
+/* AUTH FORMS                                   */
+/* ============================================ */
+.auth-form {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+/* ============================================ */
+/* FORM ELEMENTS                                */
+/* ============================================ */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #f9fafb;
+    color: var(--text-dark);
+    outline: none;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: #cbd5e1;
+    background: #f3f4f6;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(59, 91, 219, 0.1);
+}
+
+.form-group input:focus + label,
+.form-group select:focus + label {
+    color: var(--primary);
+}
+
+.form-group input::placeholder {
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+/* Input dengan icon toggle password */
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    padding-right: 48px;
+}
+
+/* Toggle Password Button */
+.toggle-password {
+    position: absolute;
+    right: 4px;
+    top: 34px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 8px 10px;
+    color: var(--text-light);
+    transition: all 0.2s;
+    z-index: 2;
+    border-radius: 8px;
+}
+
+.toggle-password:hover {
+    color: var(--text-dark);
+    background: #f3f4f6;
+}
+
+.toggle-password:active {
+    transform: scale(0.9);
+}
+
+/* Select styling */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%236b7280'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* Date input styling */
+.form-group input[type="date"] {
+    cursor: pointer;
+    color-scheme: light;
+}
+
+/* ============================================ */
+/* FORM OPTIONS (Remember me & Forgot)          */
+/* ============================================ */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-gray);
+    cursor: pointer;
+    user-select: none;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.forgot-password {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.forgot-password::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+.forgot-password:hover::after {
+    width: 100%;
+}
+
+.forgot-password:hover {
+    color: var(--primary-dark);
+}
+
+/* ============================================ */
+/* BUTTONS                                      */
+/* ============================================ */
+.btn-auth {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary), #4f6ef2);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.3px;
+}
+
+/* Efek gelombang saat hover */
+.btn-auth::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.6s ease;
+    transform: translate(-50%, -50%);
+}
+
+.btn-auth:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary);
+}
+
+.btn-auth:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.btn-auth:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(59, 91, 219, 0.3);
+}
+
+.btn-auth:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-auth:disabled::before {
+    display: none;
+}
+
+.btn-text {
+    display: inline;
+    position: relative;
+    z-index: 1;
+}
+
+.btn-loading {
+    display: none;
+    position: relative;
+    z-index: 1;
+}
+
+/* Loading animation */
+.btn-auth:disabled .btn-text {
+    display: none;
+}
+
+.btn-auth:disabled .btn-loading {
+    display: inline;
+    animation: pulse 1s ease infinite;
+}
+
+/* ============================================ */
+/* MESSAGES (Error & Success)                   */
+/* ============================================ */
+.message {
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    margin-top: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    line-height: 1.5;
+}
+
+.message.show {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.message-error {
+    background: var(--red);
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.message-success {
+    background: var(--green);
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.message-error::before {
+    content: '❌';
+    flex-shrink: 0;
+}
+
+.message-success::before {
+    content: '✅';
+    flex-shrink: 0;
+}
+
+/* Shake animation untuk error */
+.message-error.show {
+    animation: shake 0.5s ease, fadeIn 0.3s ease;
+}
+
+/* ============================================ */
+/* TERMS & CONDITIONS                           */
+/* ============================================ */
+.terms {
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--text-gray);
+    line-height: 1.6;
+}
+
+.terms label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.terms input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.terms a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.terms a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* ============================================ */
+/* AUTH FOOTER                                  */
+/* ============================================ */
+.auth-footer {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.auth-footer p {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.auth-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.auth-footer a::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+.auth-footer a:hover::after {
+    width: 100%;
+}
+
+/* ============================================ */
+/* RESPONSIVE DESIGN                            */
+/* ============================================ */
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+        align-items: flex-start;
+        padding-top: 30px;
+    }
+
+    .auth-container {
+        padding: 30px 20px;
+        border-radius: 20px;
+    }
+
+    .auth-header h1 {
+        font-size: 24px;
+    }
+
+    .auth-header p {
+        font-size: 13px;
+    }
+
+    .logo-puzzle {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+        border-radius: 16px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+
+    .btn-auth {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .tab-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Untuk layar sangat kecil */
+@media (max-width: 360px) {
+    .auth-container {
+        padding: 24px 16px;
+    }
+
+    .auth-header h1 {
+        font-size: 22px;
+    }
+
+    .form-options {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+}
+
+/* ============================================ */
+/* DARK MODE (Opsional - untuk nanti)           */
+/* ============================================ */
+@media (prefers-color-scheme: dark) {
+    /* Bisa ditambahkan nanti jika perlu */
+}
+
+/* ============================================ */
+/* UTILITY CLASSES                              */
+/* ============================================ */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mt-4 { margin-top: 32px; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+.hidden { display: none !important; }
+.visible { display: block !important; }
+
+/* ============================================ */
+/* PRINT STYLES (Untuk nanti)                   */
+/* ============================================ */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .auth-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
