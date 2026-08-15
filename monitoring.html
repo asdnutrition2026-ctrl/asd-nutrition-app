@@ -7,386 +7,532 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         :root {
-            --primary: #3b5bdb;
-            --navy: #12224a;
-            --text-dark: #1f2937;
-            --text-gray: #6b7280;
-            --border: #e5e7eb;
-            --white: #ffffff;
-            --bg: #eef1f5;
-            --radius-sm: 12px;
-            --green: #d1fae5;
-            --green-text: #065f46;
-            --red: #fee2e2;
-            --red-text: #991b1b;
+            --primary: #3b5bdb; --navy: #12224a; --text-dark: #1f2937;
+            --text-gray: #6b7280; --border: #e5e7eb; --white: #ffffff;
+            --bg: #eef1f5; --radius-sm: 12px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
-            background: var(--bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 24px 0;
-            margin: 0;
+            background: var(--bg); display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 24px 0; margin: 0;
         }
-
         .phone {
-            width: 390px;
-            max-width: 100vw;
-            background: var(--white);
-            border-radius: 36px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            position: relative;
-            height: 90vh;
-            max-height: 850px;
-            display: flex;
-            flex-direction: column;
+            width: 390px; max-width: 100vw; background: var(--white);
+            border-radius: 36px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative; height: 90vh; max-height: 850px; display: flex; flex-direction: column;
         }
-
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            padding-bottom: 100px;
-        }
-
-        .page-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .back-btn {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: #f3f4f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: none;
-            font-size: 18px;
-            text-decoration: none;
-            color: var(--text-dark);
-        }
-
+        .main-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .back-btn { width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 18px; text-decoration: none; color: var(--text-dark); }
         .page-title { font-size: 22px; color: var(--navy); font-weight: 700; }
-
-        .alert {
-            padding: 14px 16px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            display: none;
-        }
-
-        .alert.show { display: flex; align-items: center; gap: 8px; }
-        .alert-success { background: var(--green); color: var(--green-text); }
-        .alert-error { background: var(--red); color: var(--red-text); }
-
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); padding: 14px 20px; border-radius: 16px; font-size: 13px; font-weight: 600; z-index: 9999; transition: all 0.5s; max-width: 350px; width: 90%; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast-success { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
+        .toast-error { background: #fee2e2; color: #991b1b; border: 2px solid #fca5a5; }
+        .toast-warning { background: #fef3c7; color: #92400e; border: 2px solid #fcd34d; }
+        .disclaimer { background: #fef3c7; border-radius: 12px; padding: 10px 14px; font-size: 11px; color: #92400e; margin-bottom: 16px; line-height: 1.5; }
+        .quick-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 16px 0; }
+        .quick-item { border-radius: 14px; padding: 12px 8px; text-align: center; }
+        .quick-item.kalori{background:#fdf3e3;} .quick-item.skor{background:#f2edfb;} .quick-item.target{background:#eaf2fb;}
+        .quick-val { font-size: 20px; font-weight: 800; color: var(--navy); }
+        .quick-lbl { font-size: 10px; color: var(--text-gray); margin-top: 2px; }
+        .sesi-section { margin-bottom: 16px; }
+        .sesi-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .sesi-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .sesi-icon.sarapan{background:#e8f7ec; color:#4caf50;} .sesi-icon.siang{background:#fdf3e3; color:#f5a623;}
+        .sesi-icon.malam{background:#eaf2fb; color:#3b82f6;} .sesi-icon.camilan{background:#fdeaf1; color:#ec4899;}
+        .sesi-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+        .sesi-cal { font-size: 11px; color: var(--text-gray); margin-left: auto; }
+        .sesi-buttons { display: flex; gap: 6px; }
+        .btn-photo, .btn-gallery { flex: 1; padding: 12px; border: 2px solid #3b5bdb; border-radius: 12px; background: #e8edff; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; font-family: inherit; transition: all 0.2s; text-align: center; }
+        .btn-photo:hover, .btn-gallery:hover { background: #d4e0ff; }
+        .add-btn { width: 100%; padding: 12px; border: 2px dashed #cbd5e1; border-radius: 12px; background: #f9fafb; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-gray); transition: all 0.2s; font-family: inherit; margin-top: 6px; }
+        .add-btn:hover { border-color: #3b5bdb; background: #e8edff; color: #3b5bdb; }
+        .food-entry { background: #f9fafb; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-top: 8px; border: 1px solid var(--border); }
+        .food-entry-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: #e8f7ec; flex-shrink: 0; }
+        .food-entry-info { flex: 1; min-width: 0; }
+        .food-entry-name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+        .food-entry-detail { font-size: 10px; color: var(--text-gray); margin-top: 2px; }
+        .food-entry-remove { width: 28px; height: 28px; border-radius: 50%; border: none; background: #fee2e2; color: #ef4444; cursor: pointer; font-size: 14px; flex-shrink: 0; }
+        .status-badge { font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 700; flex-shrink: 0; }
+        .status-badge.habis { background: #d1fae5; color: #065f46; }
+        .status-badge.sebagian { background: #fef3c7; color: #92400e; }
+        .status-badge.ditolak { background: #fee2e2; color: #991b1b; }
         .form-group { margin-bottom: 20px; }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-family: inherit;
-            background: #f9fafb;
-            color: var(--text-dark);
-            outline: none;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
-        }
-
-        .form-group textarea { resize: vertical; min-height: 80px; }
-
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: #f9fafb; color: var(--text-dark); outline: none; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(59,91,219,0.1); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        .food-groups h3 { font-size: 14px; color: var(--navy); margin-bottom: 12px; }
-        .food-groups p { font-size: 11px; color: var(--text-gray); margin-bottom: 12px; }
-
-        .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-        .food-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: #f9fafb;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .food-item.selected {
-            border-color: #4caf50;
-            background: #e8f7ec;
-        }
-
-        .food-item input { display: none; }
-        .food-emoji { font-size: 20px; }
-
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #3b5bdb, #4f6ef2);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-primary:disabled {
-            background: #cbd5e1;
-            cursor: not-allowed;
-        }
-
-        .bottomnav {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: white;
-            border-top: 1px solid #eef0f3;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 6px 18px 6px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 10.5px;
-            color: #9aa2b1;
-            text-decoration: none;
-        }
-
+        .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #3b5bdb, #4f6ef2); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .porsi-btn, .kondisi-btn { padding: 10px 16px; border: 2px solid var(--border); border-radius: 20px; background: #f9fafb; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-gray); transition: all 0.2s; font-family: inherit; }
+        .porsi-btn.selected { border-color: #3b5bdb !important; background: #3b5bdb !important; color: white !important; }
+        .kondisi-btn.selected-habis { border-color: #4caf50 !important; background: #4caf50 !important; color: white !important; }
+        .kondisi-btn.selected-sebagian { border-color: #f5a623 !important; background: #f5a623 !important; color: white !important; }
+        .kondisi-btn.selected-ditolak { border-color: #ef4444 !important; background: #ef4444 !important; color: white !important; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: flex-end; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: white; border-radius: 24px 24px 0 0; padding: 24px; width: 100%; max-width: 390px; max-height: 75vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .modal-title { font-size: 18px; font-weight: 700; color: var(--navy); }
+        .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-gray); }
+        .search-box { display: flex; align-items: center; gap: 8px; background: #f3f4f6; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; }
+        .search-box input { flex: 1; border: none; background: transparent; font-size: 14px; outline: none; font-family: inherit; }
+        .food-option { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+        .food-option:hover { background: #f3f4f6; }
+        .food-option-icon { font-size: 20px; }
+        .food-option-info { flex: 1; }
+        .food-option-name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+        .food-option-cat { font-size: 10px; color: var(--text-gray); }
+        .food-option-nutri { font-size: 10px; color: #3b82f6; font-weight: 600; }
+        .candidate-item { display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; background: #f9fafb; }
+        .candidate-item.selected { border-color: #4caf50; background: #e8f7ec; }
+        .candidate-check { font-size: 22px; color: #cbd5e1; }
+        .candidate-item.selected .candidate-check { color: #4caf50; }
+        .bottomnav { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #eef0f3; display: flex; justify-content: space-around; padding: 10px 6px 18px 6px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: #9aa2b1; text-decoration: none; }
         .nav-item.active { color: var(--primary); }
         .nav-item .navic { font-size: 18px; }
-
-        @media (max-width: 420px) {
-            .phone { border-radius: 0; height: 100vh; max-height: 100vh; }
-        }
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 200; justify-content: center; align-items: center; flex-direction: column; gap: 16px; }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner { width: 60px; height: 60px; border: 5px solid #f3f4f6; border-top-color: #3b5bdb; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: white; font-size: 14px; font-weight: 600; }
+        @media (max-width: 420px) { .phone { border-radius: 0; height: 100vh; max-height: 100vh; } }
     </style>
 </head>
 <body>
 
+    <div class="toast" id="toast"></div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">🔍 AI mendeteksi makanan...</div>
+    </div>
+
     <div class="phone">
         <div class="main-content">
-            
-            <div class="page-header">
-                <a href="dashboard.html" class="back-btn">←</a>
-                <h1 class="page-title">📋 Input Monitoring Harian</h1>
+            <div class="page-header"><a href="dashboard.html" class="back-btn">←</a><h1 class="page-title">📋 Monitoring Harian</h1></div>
+            <div class="disclaimer">⚠️ Target gizi menggunakan AKG umum. Kebutuhan si kecil bisa berbeda karena kondisi ASD.</div>
+            <div class="quick-summary">
+                <div class="quick-item kalori"><div class="quick-val" id="totalKalori">0</div><div class="quick-lbl">Kalori (kkal)</div></div>
+                <div class="quick-item skor"><div class="quick-val" id="skorPPH">0/9</div><div class="quick-lbl">Keragaman</div></div>
+                <div class="quick-item target"><div class="quick-val" id="persenTarget">0%</div><div class="quick-lbl">Target</div></div>
             </div>
 
-            <div id="alertBox" class="alert"></div>
+            <div class="sesi-section">
+                <div class="sesi-header"><div class="sesi-icon sarapan">🌅</div><span class="sesi-title">Sarapan</span><span class="sesi-cal" id="calSarapan">0 kkal</span></div>
+                <div class="sesi-buttons"><button class="btn-photo" onclick="openCamera('sarapan')">📸 Kamera</button><button class="btn-gallery" onclick="openGallery('sarapan')">🖼️ Galeri</button></div>
+                <button class="add-btn" onclick="openSearch('sarapan')">🔍 Cari Manual</button>
+                <input type="file" id="cameraInput_sarapan" accept="image/*" capture="environment" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'sarapan')">
+                <input type="file" id="galleryInput_sarapan" accept="image/*" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'sarapan')">
+                <div id="listSarapan"></div>
+            </div>
+
+            <div class="sesi-section">
+                <div class="sesi-header"><div class="sesi-icon siang">☀️</div><span class="sesi-title">Makan Siang</span><span class="sesi-cal" id="calSiang">0 kkal</span></div>
+                <div class="sesi-buttons"><button class="btn-photo" onclick="openCamera('siang')">📸 Kamera</button><button class="btn-gallery" onclick="openGallery('siang')">🖼️ Galeri</button></div>
+                <button class="add-btn" onclick="openSearch('siang')">🔍 Cari Manual</button>
+                <input type="file" id="cameraInput_siang" accept="image/*" capture="environment" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'siang')">
+                <input type="file" id="galleryInput_siang" accept="image/*" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'siang')">
+                <div id="listSiang"></div>
+            </div>
+
+            <div class="sesi-section">
+                <div class="sesi-header"><div class="sesi-icon malam">🌙</div><span class="sesi-title">Makan Malam</span><span class="sesi-cal" id="calMalam">0 kkal</span></div>
+                <div class="sesi-buttons"><button class="btn-photo" onclick="openCamera('malam')">📸 Kamera</button><button class="btn-gallery" onclick="openGallery('malam')">🖼️ Galeri</button></div>
+                <button class="add-btn" onclick="openSearch('malam')">🔍 Cari Manual</button>
+                <input type="file" id="cameraInput_malam" accept="image/*" capture="environment" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'malam')">
+                <input type="file" id="galleryInput_malam" accept="image/*" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'malam')">
+                <div id="listMalam"></div>
+            </div>
+
+            <div class="sesi-section">
+                <div class="sesi-header"><div class="sesi-icon camilan">🍪</div><span class="sesi-title">Camilan</span><span class="sesi-cal" id="calCamilan">0 kkal</span></div>
+                <div class="sesi-buttons"><button class="btn-photo" onclick="openCamera('camilan')">📸 Kamera</button><button class="btn-gallery" onclick="openGallery('camilan')">🖼️ Galeri</button></div>
+                <button class="add-btn" onclick="openSearch('camilan')">🔍 Cari Manual</button>
+                <input type="file" id="cameraInput_camilan" accept="image/*" capture="environment" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'camilan')">
+                <input type="file" id="galleryInput_camilan" accept="image/*" style="display:none;" onchange="handleFoodPhoto(this.files[0], 'camilan')">
+                <div id="listCamilan"></div>
+            </div>
+
+            <hr style="border:none; border-top:1px solid var(--border); margin:20px 0;">
 
             <form id="monitoringForm" onsubmit="saveData(event)">
-                
-                <div class="form-group">
-                    <label>📅 Tanggal Pencatatan</label>
-                    <input type="date" id="tglCatat" required>
-                </div>
-
+                <div class="form-group"><label>📅 Tanggal Pencatatan</label><input type="date" id="tglCatat" required></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>⚖️ Berat Badan (kg)</label>
-                        <input type="number" id="beratBadan" placeholder="22.5" step="0.1" required>
-                    </div>
-                    <div class="form-group">
-                        <label>📏 Tinggi Badan (cm)</label>
-                        <input type="number" id="tinggiBadan" placeholder="118" step="0.1" required>
-                    </div>
+                    <div class="form-group"><label>⚖️ Berat Badan (kg)</label><input type="number" id="beratBadan" placeholder="22.5" step="0.1" required></div>
+                    <div class="form-group"><label>📏 Tinggi Badan (cm)</label><input type="number" id="tinggiBadan" placeholder="118" step="0.1" required></div>
                 </div>
-
-                <div class="form-group">
-                    <label>🩸 Hemoglobin / Hb (g/dL) - Opsional</label>
-                    <input type="number" id="hemoglobin" placeholder="12.5" step="0.1">
-                </div>
-
-                <div class="food-groups">
-                    <h3>🍽️ Keragaman Pangan Hari Ini</h3>
-                    <p>Centang kelompok pangan yang dikonsumsi si kecil</p>
-                    <div class="food-grid" id="foodGrid">
-                        <label class="food-item"><input type="checkbox" class="food-check" value="1"><span class="food-emoji">🌾</span> Serealia</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="2"><span class="food-emoji">🥔</span> Umbi-umbian</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="3"><span class="food-emoji">🥬</span> Sayuran</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="4"><span class="food-emoji">🍎</span> Buah-buahan</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="5"><span class="food-emoji">🥩</span> Daging & unggas</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="6"><span class="food-emoji">🥚</span> Telur</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="7"><span class="food-emoji">🐟</span> Ikan & seafood</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="8"><span class="food-emoji">🥜</span> Kacang-kacangan</label>
-                        <label class="food-item"><input type="checkbox" class="food-check" value="9"><span class="food-emoji">🥛</span> Susu & olahan</label>
-                    </div>
-                    <p style="font-size:12px; margin-top:8px;">Skor: <strong id="skorIDDS">0</strong>/9</p>
-                </div>
-
-                <div class="form-group">
-                    <label>✅ Makanan yang Diterima</label>
-                    <textarea id="makananDiterima" placeholder="Contoh: nasi putih, ayam goreng, tahu" rows="2"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>❌ Makanan yang Ditolak</label>
-                    <textarea id="makananDitolak" placeholder="Contoh: sayur bayam, buah apel" rows="2"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>📝 Catatan Sensori</label>
-                    <textarea id="catatanSensori" placeholder="Contoh: suka tekstur renyah, tidak suka lembek" rows="3"></textarea>
-                </div>
-
+                <div class="form-group"><label>🩸 Hemoglobin (g/dL) - Opsional</label><input type="number" id="hemoglobin" placeholder="12.5" step="0.1"></div>
+                <div class="form-group"><label>📝 Catatan Sensori</label><textarea id="catatanSensori" placeholder="Contoh: suka tekstur renyah" rows="3"></textarea></div>
                 <button type="submit" class="btn-primary" id="btnSimpan">💾 Simpan Data Monitoring</button>
             </form>
         </div>
 
         <div class="bottomnav">
             <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
-            <a href="#" class="nav-item"><div class="navic">📊</div>Riwayat</a>
+            <a href="history.html" class="nav-item"><div class="navic">📊</div>Riwayat</a>
             <a href="monitoring.html" class="nav-item active"><div class="navic">➕</div>Input</a>
-            <a href="#" class="nav-item"><div class="navic">💬</div>Pesan</a>
+            <a href="konsultasi.html" class="nav-item"><div class="navic">💬</div>Pesan</a>
             <a href="#" class="nav-item" onclick="logout()"><div class="navic">👤</div>Profil</a>
         </div>
     </div>
 
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header"><span class="modal-title">Pilih Makanan</span><button class="modal-close" onclick="closeSearchModal()">✕</button></div>
+            <div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="Cari makanan..." oninput="filterFoods()"></div>
+            <div id="foodListContainer"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detectionModal">
+        <div class="modal-content">
+            <div class="modal-header"><span class="modal-title">📸 Hasil Deteksi AI</span><button class="modal-close" onclick="closeDetectionModal()">✕</button></div>
+            <div id="detectionResults"></div>
+            <button class="btn-primary" style="margin-top:12px;" onclick="confirmAddDetected()">✅ Tambahkan yang Dipilih</button>
+            <button class="add-btn" style="margin-top:8px;" onclick="closeDetectionModal(); openSearch(currentSesi)">🔍 Cari Manual</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="weightModal">
+        <div class="modal-content">
+            <div class="modal-header"><span class="modal-title" id="weightModalTitle">Jumlah Makanan</span><button class="modal-close" onclick="closeWeightModal()">✕</button></div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; background:#f9fafb; padding:12px; border-radius:12px;">
+                <span style="font-size:24px;" id="selectedFoodIcon">🍚</span>
+                <div><div style="font-size:14px; font-weight:600;" id="selectedFoodName">-</div><div style="font-size:11px; color:var(--text-gray);" id="selectedFoodCat">-</div></div>
+            </div>
+            <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px;">Jumlah (gram)</label>
+            <input type="number" id="weightInput" value="100" min="1" style="width:100%; padding:12px; border:2px solid var(--border); border-radius:10px; font-size:14px; outline:none; margin-bottom:12px;" oninput="clearPorsiSelection()">
+            <div style="display:flex; gap:6px; margin-bottom:12px;">
+                <button type="button" class="porsi-btn" data-gram="50" onclick="setPorsi(50, this)">🥄 50g</button>
+                <button type="button" class="porsi-btn selected" data-gram="100" onclick="setPorsi(100, this)">🍚 100g</button>
+                <button type="button" class="porsi-btn" data-gram="150" onclick="setPorsi(150, this)">🍽️ 150g</button>
+            </div>
+            <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px;">Kondisi Makan</label>
+            <div style="display:flex; gap:6px; margin-bottom:16px;">
+                <button type="button" class="kondisi-btn selected-habis" data-kondisi="habis" onclick="setKondisi('habis', this)">😋 Habis</button>
+                <button type="button" class="kondisi-btn" data-kondisi="sebagian" onclick="setKondisi('sebagian', this)">😐 Sebagian</button>
+                <button type="button" class="kondisi-btn" data-kondisi="ditolak" onclick="setKondisi('ditolak', this)">😣 Ditolak</button>
+            </div>
+            <button class="btn-primary" onclick="confirmAddFood()">✅ Tambahkan</button>
+        </div>
+    </div>
+
     <script>
-        // ============================================
-        // URL API (SUDAH TERPASANG!)
-        // ============================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyBuXLReHkOVPHsONIhTI-LdXYp3rP0VInueTBW4-OGQe4g_kYvtAD1CAvgO3CZbyuj/exec';
-
-        // ============================================
-        // CEK SESSION
-        // ============================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwY1S8jV4MXdhB6f4gMfkAPzVT-qMCa0tlpxQr4BiVvgH9nLfxA0pnr_LamBQc5fT7E/exec';
+        const VISION_API_KEY = 'AIzaSyDafT-GJD-vf5dkKEdS9Eu2X5Rw90PsbE8';
+        const VISION_URL = 'https://vision.googleapis.com/v1/images:annotate?key=' + VISION_API_KEY;
         const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
-        if (!session.userId) {
-            window.location.href = 'index.html';
-        }
-
-        // Set tanggal hari ini
+        if (!session.userId) { window.location.href = 'index.html'; }
         document.getElementById('tglCatat').valueAsDate = new Date();
 
-        // Hitung skor IDDS
-        document.querySelectorAll('.food-check').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    this.parentElement.classList.add('selected');
-                } else {
-                    this.parentElement.classList.remove('selected');
-                }
-                const checked = document.querySelectorAll('.food-check:checked').length;
-                document.getElementById('skorIDDS').textContent = checked;
+        const TKPI_DB = [
+            {kode:"SR01", nama:"Nasi putih", kategori:"serealia", icon:"🍚", energi:130, protein:2.7, lemak:0.3, kh:28.2, bdd:100},
+            {kode:"SR02", nama:"Nasi goreng", kategori:"serealia", icon:"🍛", energi:180, protein:4.5, lemak:6.2, kh:28, bdd:100},
+            {kode:"SR03", nama:"Bubur ayam", kategori:"serealia", icon:"🥣", energi:90, protein:4.5, lemak:2.1, kh:14, bdd:100},
+            {kode:"SR04", nama:"Roti tawar", kategori:"serealia", icon:"🍞", energi:265, protein:7.6, lemak:3.2, kh:50.1, bdd:100},
+            {kode:"SR05", nama:"Mie goreng", kategori:"serealia", icon:"🍜", energi:280, protein:6.5, lemak:12.3, kh:38.5, bdd:100},
+            {kode:"UB01", nama:"Kentang rebus", kategori:"umbi", icon:"🥔", energi:87, protein:2, lemak:0.1, kh:19.6, bdd:100},
+            {kode:"UB02", nama:"Kentang goreng", kategori:"umbi", icon:"🍟", energi:312, protein:3.4, lemak:15, kh:41, bdd:100},
+            {kode:"KK01", nama:"Tempe goreng", kategori:"kacang", icon:"🟤", energi:338, protein:20, lemak:28, kh:9, bdd:100},
+            {kode:"KK02", nama:"Tahu putih", kategori:"kacang", icon:"⬜", energi:80, protein:10.9, lemak:4.7, kh:0.8, bdd:100},
+            {kode:"PH01", nama:"Ayam goreng", kategori:"hewani", icon:"🍗", energi:220, protein:25, lemak:12, kh:0, bdd:100},
+            {kode:"PH02", nama:"Ayam rebus", kategori:"hewani", icon:"🍗", energi:150, protein:28, lemak:4, kh:0, bdd:100},
+            {kode:"PH03", nama:"Telur rebus", kategori:"hewani", icon:"🥚", energi:155, protein:12.6, lemak:10.6, kh:1.1, bdd:90},
+            {kode:"PH04", nama:"Telur dadar", kategori:"hewani", icon:"🍳", energi:200, protein:13, lemak:15, kh:2, bdd:100},
+            {kode:"PH05", nama:"Ikan goreng", kategori:"hewani", icon:"🐟", energi:220, protein:25, lemak:13, kh:0, bdd:75},
+            {kode:"PH06", nama:"Daging sapi", kategori:"hewani", icon:"🥩", energi:250, protein:26, lemak:15, kh:0, bdd:100},
+            {kode:"PH07", nama:"Hati ayam", kategori:"hewani", icon:"🫀", energi:167, protein:24, lemak:6.5, kh:1.5, bdd:100},
+            {kode:"SY01", nama:"Bayam", kategori:"sayur", icon:"🥬", energi:23, protein:2.9, lemak:0.4, kh:3.6, bdd:100},
+            {kode:"SY02", nama:"Wortel", kategori:"sayur", icon:"🥕", energi:35, protein:0.9, lemak:0.2, kh:8.2, bdd:100},
+            {kode:"SY03", nama:"Brokoli", kategori:"sayur", icon:"🥦", energi:35, protein:2.8, lemak:0.4, kh:6.6, bdd:100},
+            {kode:"SY04", nama:"Kangkung", kategori:"sayur", icon:"🥬", energi:28, protein:3, lemak:0.5, kh:3.9, bdd:100},
+            {kode:"SY05", nama:"Tomat", kategori:"sayur", icon:"🍅", energi:24, protein:1.3, lemak:0.3, kh:4.7, bdd:100},
+            {kode:"BH01", nama:"Pisang", kategori:"buah", icon:"🍌", energi:99, protein:1.1, lemak:0.3, kh:25.8, bdd:75},
+            {kode:"BH02", nama:"Jeruk", kategori:"buah", icon:"🍊", energi:47, protein:0.9, lemak:0.1, kh:11.8, bdd:73},
+            {kode:"BH03", nama:"Apel", kategori:"buah", icon:"🍎", energi:52, protein:0.3, lemak:0.2, kh:13.8, bdd:88},
+            {kode:"BH04", nama:"Pepaya", kategori:"buah", icon:"🍈", energi:46, protein:0.5, lemak:0.1, kh:12.2, bdd:75},
+            {kode:"BH05", nama:"Mangga", kategori:"buah", icon:"🥭", energi:60, protein:0.8, lemak:0.4, kh:15, bdd:65},
+            {kode:"SS01", nama:"Susu sapi", kategori:"susu", icon:"🥛", energi:61, protein:3.2, lemak:3.5, kh:4.8, bdd:100},
+            {kode:"SS02", nama:"Yogurt", kategori:"susu", icon:"🍦", energi:61, protein:3.5, lemak:3.3, kh:4.7, bdd:100},
+            {kode:"SS03", nama:"Keju", kategori:"susu", icon:"🧀", energi:403, protein:24.9, lemak:33.1, kh:1.3, bdd:100}
+        ];
+
+        let currentSesi = '';
+        let selectedFood = null;
+        let selectedStatus = 'habis';
+        const state = { sarapan: [], siang: [], malam: [], camilan: [] };
+        let detectedFoodsData = [];
+        let selectedCandidates = new Set();
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast toast-' + type + ' show';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        function showLoading(text) { document.getElementById('loadingText').textContent = text; document.getElementById('loadingOverlay').classList.add('active'); }
+        function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+
+        function hitungGizi(food, beratGram) {
+            const bdd = food.bdd || 100;
+            return { energi:(beratGram/100)*food.energi*(bdd/100), protein:(beratGram/100)*food.protein*(bdd/100), lemak:(beratGram/100)*food.lemak*(bdd/100), kh:(beratGram/100)*food.kh*(bdd/100) };
+        }
+        function getKelompokPangan(kategori) {
+            const map = {'serealia':1,'umbi':2,'kacang':3,'hewani':4,'sayur':5,'buah':5,'minyak':6,'susu':4,'gula':8};
+            return map[kategori] || 9;
+        }
+        function hitungSkorKeragaman() {
+            const semua = [...state.sarapan,...state.siang,...state.malam,...state.camilan];
+            const kelompok = new Set();
+            semua.forEach(item => { if(item.status!=='ditolak') kelompok.add(getKelompokPangan(item.food.kategori)); });
+            return kelompok.size;
+        }
+        function hitungTotalGizi() {
+            const semua = [...state.sarapan,...state.siang,...state.malam,...state.camilan];
+            const total = {energi:0,protein:0,lemak:0,kh:0};
+            semua.forEach(item => { if(item.status!=='ditolak'){ const g=hitungGizi(item.food,item.berat); Object.keys(total).forEach(k=>total[k]+=g[k]); } });
+            return total;
+        }
+        function updateUI() {
+            const total = hitungTotalGizi();
+            const skor = hitungSkorKeragaman();
+            document.getElementById('totalKalori').textContent = Math.round(total.energi);
+            document.getElementById('skorPPH').textContent = skor+'/9';
+            document.getElementById('persenTarget').textContent = Math.round((total.energi/1650)*100)+'%';
+            updateSesi('sarapan','calSarapan','listSarapan');
+            updateSesi('siang','calSiang','listSiang');
+            updateSesi('malam','calMalam','listMalam');
+            updateSesi('camilan','calCamilan','listCamilan');
+        }
+        function updateSesi(sesi, calId, listId) {
+            const items = state[sesi];
+            const cal = items.reduce((sum,item)=>{ if(item.status==='ditolak') return sum; return sum+hitungGizi(item.food,item.berat).energi; },0);
+            document.getElementById(calId).textContent = Math.round(cal)+' kkal';
+            let html = '';
+            items.forEach((item,i)=>{
+                const g = hitungGizi(item.food,item.berat);
+                const sl = item.status==='habis'?'Habis':item.status==='sebagian'?'Sebagian':'Ditolak';
+                const tag = item.dariFoto ? '📸 ' : '';
+                html += `<div class="food-entry"><div class="food-entry-icon">${item.food.icon}</div><div class="food-entry-info"><div class="food-entry-name">${tag}${item.food.nama}</div><div class="food-entry-detail">${item.berat}g • ${Math.round(g.energi)} kkal</div></div><span class="status-badge ${item.status}">${sl}</span><button class="food-entry-remove" onclick="removeFood('${sesi}',${i})">✕</button></div>`;
             });
-        });
+            document.getElementById(listId).innerHTML = html;
+        }
 
-        // ============================================
-        // SIMPAN DATA
-        // ============================================
-        async function saveData(event) {
-            event.preventDefault();
+        function openCamera(sesi) { currentSesi=sesi; document.getElementById('cameraInput_'+sesi).click(); }
+        function openGallery(sesi) { currentSesi=sesi; document.getElementById('galleryInput_'+sesi).click(); }
+        function fileToBase64(file) { return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); }); }
+        function resizeImage(file,maxSize,quality){
+            return new Promise((resolve,reject)=>{
+                const reader=new FileReader();
+                reader.onload=function(e){
+                    const img=new Image();
+                    img.onload=function(){
+                        let w=img.width,h=img.height;
+                        if(w>h&&w>maxSize){h=Math.round(h*maxSize/w);w=maxSize;}
+                        else if(h>maxSize){w=Math.round(w*maxSize/h);h=maxSize;}
+                        const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+                        const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+                        resolve(canvas.toDataURL('image/jpeg',quality));
+                    };
+                    img.onerror=reject;img.src=e.target.result;
+                };
+                reader.onerror=reject;reader.readAsDataURL(file);
+            });
+        }
 
-            const btn = document.getElementById('btnSimpan');
-            const alertBox = document.getElementById('alertBox');
-            
-            const data = {
-                action: 'saveMonitoring',
-                userId: session.userId,
-                token: session.token || '',
-                tgl_catat: document.getElementById('tglCatat').value,
-                berat_badan: document.getElementById('beratBadan').value,
-                tinggi_badan: document.getElementById('tinggiBadan').value,
-                hb: document.getElementById('hemoglobin').value || '0',
-                skor_idds: document.querySelectorAll('.food-check:checked').length,
-                makanan_diterima: document.getElementById('makananDiterima').value,
-                makanan_ditolak: document.getElementById('makananDitolak').value,
-                catatan_sensori: document.getElementById('catatanSensori').value
-            };
-
-            if (!data.berat_badan || !data.tinggi_badan) {
-                showAlert('error', '❌ Berat Badan dan Tinggi Badan wajib diisi!');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = '⏳ Menyimpan...';
-            hideAlert();
-
+        async function handleFoodPhoto(file, sesi) {
+            if(!file) return;
+            currentSesi = sesi;
+            selectedCandidates.clear();
+            showLoading('🔍 AI mendeteksi makanan...');
             try {
-                const params = new URLSearchParams(data).toString();
-                const url = API_URL + '?' + params;
-                console.log('📤 Simpan ke:', url);
-
-                const response = await fetch(url);
-                const result = await response.json();
-                console.log('📥 Response:', result);
-
-                if (result.success) {
-                    showAlert('success', '✅ Data berhasil disimpan!');
-                    document.getElementById('monitoringForm').reset();
-                    document.getElementById('tglCatat').valueAsDate = new Date();
-                    document.querySelectorAll('.food-item').forEach(el => el.classList.remove('selected'));
-                    document.getElementById('skorIDDS').textContent = '0';
-                    document.querySelector('.main-content').scrollTop = 0;
-                } else {
-                    showAlert('error', '❌ ' + (result.message || 'Gagal menyimpan'));
-                }
-            } catch (error) {
-                console.error('❌ Error:', error);
-                showAlert('error', '⚠️ Gagal terhubung. Data disimpan di lokal.');
-                // Simpan ke localStorage
-                let local = JSON.parse(localStorage.getItem('monitoring_local') || '[]');
-                local.push({ ...data, timestamp: new Date().toISOString() });
-                localStorage.setItem('monitoring_local', JSON.stringify(local));
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '💾 Simpan Data Monitoring';
+                const resizedBase64 = await resizeImage(file, 500, 0.7);
+                const detectedFoods = await detectFoodWithVision(resizedBase64);
+                hideLoading();
+                if(detectedFoods.length===0){ showToast('⚠️ Tidak ada makanan terdeteksi. Cari manual ya.','warning'); return; }
+                detectedFoodsData = detectedFoods;
+                showDetectionResults(detectedFoods);
+            } catch(error) {
+                hideLoading();
+                showToast('⚠️ Deteksi gagal. Cari manual ya.','warning');
             }
         }
 
-        function showAlert(type, message) {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.textContent = message;
-            alertBox.className = 'alert alert-' + type + ' show';
+        async function detectFoodWithVision(base64Image) {
+            const clean = base64Image.replace(/^data:image\/\w+;base64,/,'');
+            const body = { requests:[{ image:{content:clean}, features:[{type:'LABEL_DETECTION',maxResults:20}] }] };
+            const res = await fetch(VISION_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+            if(!res.ok) throw new Error('Vision error '+res.status);
+            const result = await res.json();
+            return parseVisionResult(result);
         }
 
-        function hideAlert() {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.className = 'alert';
+        function parseVisionResult(result) {
+            const detected = [];
+            const seen = new Set();
+            if(result.responses && result.responses[0] && result.responses[0].labelAnnotations) {
+                result.responses[0].labelAnnotations.forEach(label => {
+                    if(!isFoodLabel(label.description)) return;
+                    if(label.score < 0.6) return;
+                    const simple = label.description.toLowerCase().replace(/[^a-z]/g,'');
+                    if(seen.has(simple)) return;
+                    seen.add(simple);
+                    const tkpiMatch = matchWithTKPI(label.description);
+                    detected.push({ detectedName:label.description, confidence:Math.round(label.score*100), tkpiFood:tkpiMatch, matched:!!tkpiMatch });
+                });
+            }
+            return detected.slice(0,10);
         }
 
-        function logout() {
-            localStorage.removeItem('asd_nutrition_session');
-            window.location.href = 'index.html';
+        function isFoodLabel(label) {
+            const keywords = ['food','rice','chicken','meat','vegetable','fruit','egg','fish','noodle','bread','soup','dish','meal','banana','apple','orange','spinach','carrot','broccoli','tofu','tempeh','beef','potato','pasta'];
+            return keywords.some(k => label.toLowerCase().includes(k));
         }
 
-        console.log('✅ Monitoring page ready');
+        function matchWithTKPI(label) {
+            const lower = label.toLowerCase().trim();
+            const mapping = {
+                'rice':'SR01','white rice':'SR01','fried rice':'SR02','porridge':'SR03','congee':'SR03',
+                'bread':'SR04','toast':'SR04','noodle':'SR05','noodles':'SR05','spaghetti':'SR05','pasta':'SR05',
+                'potato':'UB01','french fries':'UB02','fries':'UB02','tempeh':'KK01','tofu':'KK02',
+                'chicken':'PH01','fried chicken':'PH01','chicken breast':'PH02','egg':'PH03','boiled egg':'PH03',
+                'omelette':'PH04','omelet':'PH04','fish':'PH05','seafood':'PH05','beef':'PH06','meat':'PH06','steak':'PH06',
+                'liver':'PH07','spinach':'SY01','leaf vegetable':'SY01','vegetable':'SY01','carrot':'SY02',
+                'broccoli':'SY03','water spinach':'SY04','tomato':'SY05','cucumber':'SY05',
+                'banana':'BH01','orange':'BH02','citrus':'BH02','apple':'BH03','papaya':'BH04','mango':'BH05',
+                'milk':'SS01','dairy':'SS01','yogurt':'SS02','yoghurt':'SS02','cheese':'SS03'
+            };
+            for(const [key,kode] of Object.entries(mapping)) {
+                if(lower.includes(key) || key.includes(lower)) return TKPI_DB.find(f=>f.kode===kode)||null;
+            }
+            return null;
+        }
+
+        function showDetectionResults(foods) {
+            const container = document.getElementById('detectionResults');
+            let html = `<p style="font-size:12px;color:var(--text-gray);margin-bottom:12px;">🤖 AI mendeteksi <strong>${foods.length} kandidat</strong>. Klik makanan yang benar:</p>`;
+            foods.forEach((food,index)=>{
+                if(food.matched){
+                    html += `<div class="candidate-item" id="cand_${index}" onclick="toggleCandidate(${index})"><span style="font-size:24px;">${food.tkpiFood.icon}</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;">${food.tkpiFood.nama}</div><div style="font-size:10px;color:var(--text-gray);">"${food.detectedName}" (${food.confidence}%)</div></div><span class="candidate-check" id="check_${index}">○</span></div>`;
+                } else {
+                    html += `<div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fef3c7;border-radius:12px;margin-bottom:8px;"><span style="font-size:24px;">🍽️</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;">${food.detectedName}</div><div style="font-size:10px;color:var(--text-gray);">⚠️ ${food.confidence}% • Tidak dikenali</div></div></div>`;
+                }
+            });
+            html += `<p style="font-size:11px;color:var(--text-gray);margin-top:12px;">👆 Klik untuk centang makanan yang benar di foto.</p>`;
+            container.innerHTML = html;
+            document.getElementById('detectionModal').classList.add('active');
+        }
+
+        function toggleCandidate(index) {
+            const el = document.getElementById('cand_'+index);
+            const check = document.getElementById('check_'+index);
+            if(selectedCandidates.has(index)) {
+                selectedCandidates.delete(index);
+                el.classList.remove('selected');
+                check.textContent = '○';
+            } else {
+                selectedCandidates.add(index);
+                el.classList.add('selected');
+                check.textContent = '✓';
+            }
+        }
+
+        function closeDetectionModal() {
+            selectedCandidates.clear();
+            document.getElementById('detectionModal').classList.remove('active');
+        }
+
+        function confirmAddDetected() {
+            if(selectedCandidates.size===0){ showToast('⚠️ Pilih dulu makanan yang benar ya 😊','warning'); return; }
+            let added=0;
+            selectedCandidates.forEach(index=>{
+                const food = detectedFoodsData[index];
+                if(food && food.matched && food.tkpiFood) {
+                    state[currentSesi].push({ food:food.tkpiFood, berat:100, status:'habis', sesi:currentSesi, dariFoto:true, confidence:food.confidence });
+                    added++;
+                }
+            });
+            selectedCandidates.clear();
+            closeDetectionModal();
+            updateUI();
+            if(added>0) showToast('✅ '+added+' makanan ditambahkan dari foto!','success');
+        }
+
+        function openSearch(sesi) { currentSesi=sesi; document.getElementById('searchInput').value=''; document.getElementById('searchModal').classList.add('active'); filterFoods(); }
+        function closeSearchModal() { document.getElementById('searchModal').classList.remove('active'); }
+        function filterFoods() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = TKPI_DB.filter(f=>f.nama.toLowerCase().includes(q));
+            let html='';
+            filtered.forEach(food=>{ html += `<div class="food-option" onclick="selectFood('${food.kode}')"><span class="food-option-icon">${food.icon}</span><div class="food-option-info"><div class="food-option-name">${food.nama}</div><div class="food-option-cat">${food.kategori}</div></div><span class="food-option-nutri">${food.energi} kkal</span></div>`; });
+            document.getElementById('foodListContainer').innerHTML = html || '<p style="text-align:center;color:#9ca3af;padding:20px;">Tidak ditemukan</p>';
+        }
+
+        function selectFood(kode) {
+            selectedFood = TKPI_DB.find(f=>f.kode===kode);
+            closeSearchModal();
+            document.getElementById('selectedFoodIcon').textContent=selectedFood.icon;
+            document.getElementById('selectedFoodName').textContent=selectedFood.nama;
+            document.getElementById('selectedFoodCat').textContent=selectedFood.kategori;
+            document.getElementById('weightInput').value=100;
+            document.querySelectorAll('.porsi-btn').forEach(b=>{b.classList.remove('selected');if(b.dataset.gram==='100')b.classList.add('selected');});
+            selectedStatus='habis';
+            document.querySelectorAll('.kondisi-btn').forEach(b=>{b.classList.remove('selected-habis','selected-sebagian','selected-ditolak');if(b.dataset.kondisi==='habis')b.classList.add('selected-habis');});
+            document.getElementById('weightModal').classList.add('active');
+        }
+        function closeWeightModal(){document.getElementById('weightModal').classList.remove('active');}
+        function setPorsi(gram,btn){document.getElementById('weightInput').value=gram;document.querySelectorAll('.porsi-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
+        function setKondisi(kondisi,btn){selectedStatus=kondisi;document.querySelectorAll('.kondisi-btn').forEach(b=>b.classList.remove('selected-habis','selected-sebagian','selected-ditolak'));btn.classList.add('selected-'+kondisi);}
+        function clearPorsiSelection(){document.querySelectorAll('.porsi-btn').forEach(b=>b.classList.remove('selected'));}
+        function confirmAddFood(){
+            const berat=parseFloat(document.getElementById('weightInput').value);
+            if(!berat||berat<=0){showToast('⚠️ Isi jumlah makanan ya 😊','warning');return;}
+            if(!selectedFood||!currentSesi)return;
+            state[currentSesi].push({food:selectedFood,berat,status:selectedStatus,sesi:currentSesi});
+            closeWeightModal();updateUI();showToast('✅ '+selectedFood.nama+' ditambahkan!','success');
+        }
+        function removeFood(sesi,index){state[sesi].splice(index,1);updateUI();showToast('🗑️ Dihapus','warning');}
+
+        async function saveData(event){
+            event.preventDefault();
+            const btn=document.getElementById('btnSimpan');
+            const total=hitungTotalGizi();
+            const skor=hitungSkorKeragaman();
+            const data={
+                action:'saveMonitoring',userId:session.userId,token:session.token||'',
+                tgl_catat:document.getElementById('tglCatat').value,
+                berat_badan:document.getElementById('beratBadan').value,
+                tinggi_badan:document.getElementById('tinggiBadan').value,
+                hb:document.getElementById('hemoglobin').value||'0',
+                skor_idds:skor,total_kalori:Math.round(total.energi),
+                total_protein:Math.round(total.protein*10)/10,total_besi:0,
+                catatan_sensori:document.getElementById('catatanSensori').value,
+                detail_makanan:JSON.stringify([...state.sarapan,...state.siang,...state.malam,...state.camilan])
+            };
+            if(!data.berat_badan||!data.tinggi_badan){showToast('⚠️ BB dan TB wajib diisi!','warning');return;}
+            btn.disabled=true;btn.textContent='⏳ Menyimpan...';
+            try{
+                const url=API_URL+'?'+new URLSearchParams(data).toString();
+                const response=await fetch(url);
+                const result=await response.json();
+                if(result.success){showToast('✅ Data berhasil disimpan! 💜','success');document.getElementById('monitoringForm').reset();document.getElementById('tglCatat').valueAsDate=new Date();Object.keys(state).forEach(k=>state[k]=[]);updateUI();}
+                else{showToast('❌ '+(result.message||'Gagal'),'error');}
+            }catch(error){
+                let local=JSON.parse(localStorage.getItem('monitoring_local')||'[]');
+                local.push({...data,timestamp:new Date().toISOString()});
+                localStorage.setItem('monitoring_local',JSON.stringify(local));
+                showToast('⚠️ Offline. Data disimpan lokal.','warning');
+            }finally{btn.disabled=false;btn.textContent='💾 Simpan Data Monitoring';}
+        }
+
+        function logout(){localStorage.removeItem('asd_nutrition_session');window.location.href='index.html';}
+
+        updateUI();
+        console.log('✅ Monitoring ready (Google Vision + Pilih Kandidat)');
     </script>
 </body>
 </html>
