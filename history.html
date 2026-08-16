@@ -4,556 +4,362 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Monitoring - ASD Nutrition AI Care</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
         :root {
-            --primary: #3b5bdb;
-            --navy: #12224a;
-            --text-dark: #1f2937;
-            --text-gray: #6b7280;
-            --border: #e5e7eb;
-            --white: #ffffff;
-            --bg: #eef1f5;
-            --green: #e8f7ec;
-            --blue: #eaf2fb;
-            --orange: #fdf3e3;
-            --purple: #f2edfb;
+            --green: #e8f7ec; --green-ic: #4caf50;
+            --blue: #eaf2fb; --blue-ic: #3b82f6;
+            --orange: #fdf3e3; --orange-ic: #f5a623;
+            --purple: #f2edfb; --purple-ic: #8b5cf6;
+            --pink: #fdeaf1; --pink-ic: #ec4899;
+            --red: #fee2e2; --red-ic: #ef4444;
+            --navy: #12224a; --text-dark: #1f2937; --text-gray: #6b7280;
+            --border: #e5e7eb; --white: #ffffff; --bg: #eef1f5;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
-            background: var(--bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 24px 0;
-            margin: 0;
+            background: var(--bg); display: flex; justify-content: center; padding: 24px 0; min-height: 100vh;
         }
-
         .phone {
-            width: 390px;
-            max-width: 100vw;
-            background: var(--white);
-            border-radius: 36px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            position: relative;
-            height: 90vh;
-            max-height: 850px;
-            display: flex;
-            flex-direction: column;
+            width: 390px; max-width: 100vw; background: var(--white);
+            border-radius: 36px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative; min-height: 90vh; max-height: 850px; display: flex; flex-direction: column;
         }
-
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            padding-bottom: 100px;
-        }
-
-        .page-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            position: sticky;
-            top: 0;
-            background: var(--white);
-            padding-bottom: 12px;
-            z-index: 10;
-        }
-
-        .back-btn {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: #f3f4f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: none;
-            font-size: 18px;
-            text-decoration: none;
-            color: var(--text-dark);
-        }
-
-        .page-title { font-size: 22px; color: var(--navy); font-weight: 700; }
+        .main-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
+        .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .back-btn { width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 18px; text-decoration: none; color: var(--text-dark); }
+        .page-title { font-size: 20px; color: var(--navy); font-weight: 700; }
+        .filter-scroll { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
+        .filter-scroll::-webkit-scrollbar { display: none; }
+        .filter-chip { padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer; border: 2px solid var(--border); background: white; color: var(--text-gray); font-family: inherit; }
+        .filter-chip.active { background: #3b5bdb; color: white; border-color: #3b5bdb; }
 
         /* Ringkasan */
-        .summary-strip {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
+        .summary-strip { background: linear-gradient(135deg, #f7f9fc, #eef2fb); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+        .summary-strip h3 { font-size: 14px; color: var(--navy); margin-bottom: 12px; }
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .summary-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dark); }
+        .summary-item .val { font-weight: 700; color: var(--navy); }
 
-        .summary-item {
-            text-align: center;
-            padding: 12px 8px;
-            border-radius: 14px;
-            font-size: 11px;
-        }
+        /* Status Banner */
+        .status-banner { padding: 10px 14px; border-radius: 12px; margin-bottom: 16px; font-size: 12px; font-weight: 600; }
+        .status-banner.warning { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .status-banner.danger { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .status-banner.success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
 
-        .summary-item .val { font-size: 18px; font-weight: 700; }
-        .summary-item .lbl { color: var(--text-gray); margin-top: 2px; }
-
-        .summary-item.bb { background: var(--green); }
-        .summary-item.tb { background: var(--blue); }
-        .summary-item.idds { background: var(--orange); }
-
-        /* Grafik sederhana */
-        .mini-chart {
-            background: #f9fafb;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .mini-chart h3 {
-            font-size: 14px;
-            color: var(--navy);
-            margin-bottom: 12px;
-        }
-
-        .chart-area {
-            height: 120px;
-            display: flex;
-            align-items: flex-end;
-            gap: 4px;
-            padding: 0 4px;
-        }
-
-        .chart-bar {
-            flex: 1;
-            background: linear-gradient(to top, var(--primary), #8b9ef5);
-            border-radius: 4px 4px 0 0;
-            min-height: 4px;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .chart-bar:hover {
-            background: linear-gradient(to top, #2b4bc7, #6b82f0);
-            transform: scaleY(1.05);
-        }
-
-        .chart-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: var(--text-gray);
-            margin-top: 8px;
-        }
-
-        /* List history */
-        .history-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .history-item {
-            background: #f9fafb;
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-
-        .history-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .history-date {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-badge {
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
+        .day-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); cursor: pointer; }
+        .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .day-date { font-size: 13px; font-weight: 700; color: var(--navy); }
+        .day-badge { font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 700; }
         .badge-baik { background: #d1fae5; color: #065f46; }
         .badge-sedang { background: #fef3c7; color: #92400e; }
         .badge-kurang { background: #fee2e2; color: #991b1b; }
+        .day-metrics { display: flex; gap: 10px; flex-wrap: wrap; }
+        .metric { font-size: 11px; color: var(--text-gray); display: flex; align-items: center; gap: 4px; }
+        .metric .val { font-weight: 700; color: var(--text-dark); }
 
-        .history-detail {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text-gray);
-        }
+        /* Status Stunting & Anemia */
+        .day-status { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .status-tag { font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 700; }
+        .status-tag.stunting-berat { background: #fee2e2; color: #991b1b; }
+        .status-tag.stunting-normal { background: #d1fae5; color: #065f46; }
+        .status-tag.anemia-berat { background: #fee2e2; color: #991b1b; }
+        .status-tag.anemia-sedang { background: #fef3c7; color: #92400e; }
+        .status-tag.anemia-normal { background: #d1fae5; color: #065f46; }
 
-        .history-detail span { font-weight: 600; color: var(--text-dark); }
-
-        .history-makanan {
-            margin-top: 8px;
-            font-size: 11px;
-            color: var(--text-gray);
-            display: flex;
-            gap: 8px;
-        }
-
-        .makanan-tag {
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .tag-diterima { background: #d1fae5; color: #065f46; }
-        .tag-ditolak { background: #fee2e2; color: #991b1b; }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-gray);
-        }
-
-        .empty-state .empty-icon { font-size: 60px; margin-bottom: 16px; }
-        .empty-state h3 { color: var(--navy); margin-bottom: 8px; }
-        .empty-state p { font-size: 13px; margin-bottom: 20px; }
-        .empty-state a {
-            display: inline-block;
-            padding: 12px 24px;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .loading-state {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-gray);
-        }
-
-        .loading-spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Bottom nav */
-        .bottomnav {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: white;
-            border-top: 1px solid #eef0f3;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 6px 18px 6px;
-            z-index: 10;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 10.5px;
-            color: #9aa2b1;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            background: none;
-        }
-
-        .nav-item.active { color: var(--primary); }
+        .day-detail { display: none; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+        .day-detail.open { display: block; }
+        .sesi-block { margin-bottom: 10px; }
+        .sesi-label { font-size: 11px; font-weight: 700; color: var(--text-gray); margin-bottom: 4px; }
+        .sesi-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 11px; }
+        .sesi-item .food-icon { font-size: 14px; }
+        .sesi-item .food-name { flex: 1; color: var(--text-dark); }
+        .sesi-item .food-gram { color: var(--text-gray); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .status-dot.habis { background: #4caf50; }
+        .status-dot.sebagian { background: #f5a623; }
+        .status-dot.ditolak { background: #ef4444; }
+        .catatan-box { background: #f9fafb; border-radius: 10px; padding: 10px; font-size: 11px; color: var(--text-gray); margin-top: 8px; }
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-gray); }
+        .empty-icon { font-size: 50px; margin-bottom: 12px; }
+        .empty-state h3 { color: var(--navy); font-size: 16px; margin-bottom: 6px; }
+        .empty-state p { font-size: 12px; margin-bottom: 16px; }
+        .empty-state a { display: inline-block; padding: 12px 20px; background: #3b5bdb; color: white; text-decoration: none; border-radius: 12px; font-size: 13px; font-weight: 600; }
+        .bottomnav { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #eef0f3; display: flex; justify-content: space-around; padding: 10px 6px 18px 6px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: #9aa2b1; text-decoration: none; }
+        .nav-item.active { color: #3b5bdb; }
         .nav-item .navic { font-size: 18px; }
-
-        @media (max-width: 420px) {
-            .phone { border-radius: 0; height: 100vh; max-height: 100vh; }
-        }
+        .nav-item.fab .navic { width: 46px; height: 46px; border-radius: 50%; background: #3b5bdb; color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-top: -26px; box-shadow: 0 8px 16px rgba(59,91,219,0.4); }
+        @media (max-width: 420px) { .phone { border-radius: 0; height: 100vh; max-height: 100vh; } }
     </style>
 </head>
 <body>
 
-    <div class="phone">
-        <div class="main-content" id="historyContent">
-            
-            <div class="page-header">
-                <a href="dashboard.html" class="back-btn">←</a>
-                <h1 class="page-title">📊 Riwayat Monitoring</h1>
-            </div>
-
-            <!-- LOADING -->
-            <div id="loadingState" class="loading-state">
-                <div class="loading-spinner"></div>
-                <p>Memuat data...</p>
-            </div>
-
-            <!-- DATA AKAN DITAMPILKAN DISINI -->
-            <div id="dataContainer" style="display:none;"></div>
-
-            <!-- EMPTY STATE -->
-            <div id="emptyState" class="empty-state" style="display:none;">
-                <div class="empty-icon">📋</div>
-                <h3>Belum ada data monitoring</h3>
-                <p>Mulai catat tumbuh kembang si kecil sekarang!</p>
-                <a href="monitoring.html">➕ Input Data Pertama</a>
-            </div>
+<div class="phone">
+    <div class="main-content">
+        <div class="page-header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1 class="page-title">📊 Riwayat Monitoring</h1>
         </div>
 
-        <!-- BOTTOM NAV -->
-        <div class="bottomnav">
-            <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
-            <a href="history.html" class="nav-item active"><div class="navic">📊</div>Riwayat</a>
-            <a href="monitoring.html" class="nav-item"><div class="navic">➕</div>Input</a>
-            <a href="#" class="nav-item"><div class="navic">💬</div>Pesan</a>
-            <a href="#" class="nav-item" onclick="logout()"><div class="navic">👤</div>Profil</a>
+        <div class="filter-scroll">
+            <button class="filter-chip active" onclick="filterPeriode('semua', this)">📚 Semua</button>
+            <button class="filter-chip" onclick="filterPeriode('7', this)">📅 7 Hari</button>
+            <button class="filter-chip" onclick="filterPeriode('30', this)">📅 30 Hari</button>
+        </div>
+
+        <div id="historyContent">
+            <p style="text-align:center; color:var(--text-gray); padding:40px;">⏳ Memuat riwayat...</p>
         </div>
     </div>
 
-    <script>
-        // ============================================
-        // URL API
-        // ============================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyBuXLReHkOVPHsONIhTI-LdXYp3rP0VInueTBW4-OGQe4g_kYvtAD1CAvgO3CZbyuj/exec';
+    <div class="bottomnav">
+        <a href="dashboard.html" class="nav-item"><div class="navic">🏠</div>Beranda</a>
+        <a href="history.html" class="nav-item active"><div class="navic">📊</div>Riwayat</a>
+        <a href="monitoring.html" class="nav-item fab"><div class="navic">+</div></a>
+        <a href="konsultasi.html" class="nav-item"><div class="navic">💬</div>Pesan</a>
+        <a href="#" class="nav-item" onclick="logout()"><div class="navic">👤</div>Profil</a>
+    </div>
+</div>
 
-        // Cek session
-        const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
-        if (!session.userId) {
-            window.location.href = 'index.html';
-        }
+<script>
+    const session = JSON.parse(localStorage.getItem('asd_nutrition_session') || '{}');
+    if (!session.userId) { window.location.href = 'index.html'; }
 
-        // ============================================
-        // LOAD DATA
-        // ============================================
-        async function loadHistory() {
-            const loadingState = document.getElementById('loadingState');
-            const dataContainer = document.getElementById('dataContainer');
-            const emptyState = document.getElementById('emptyState');
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwnzngmAC5ymBJ0WHMHV6P_X29zuNqWDWPqN5Bxt3PFdAC3GEZYyXASx0bXk7wGTSmW/exec';
 
-            try {
-                console.log('📊 Memuat riwayat untuk:', session.userId);
-                
-                const url = API_URL + '?action=getHistory&userId=' + session.userId;
-                console.log('📤 URL:', url);
+    let currentPeriode = 'semua';
+    let allData = [];
 
-                const response = await fetch(url);
-                const result = await response.json();
-                console.log('📥 Response:', result);
+    function filterPeriode(periode, btn) {
+        currentPeriode = periodo;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        renderHistory();
+    }
 
-                loadingState.style.display = 'none';
+    async function loadHistory() {
+        const container = document.getElementById('historyContent');
+        container.innerHTML = '<p style="text-align:center;color:var(--text-gray);padding:40px;">⏳ Memuat riwayat...</p>';
 
-                if (result.success && result.data && result.data.length > 1) {
-                    // Data ada (index 0 = header)
-                    const dataRows = result.data.slice(1); // Skip header
-                    
-                    // Update ringkasan
-                    updateSummary(dataRows);
-                    
-                    // Tampilkan grafik
-                    renderChart(dataRows);
-                    
-                    // Tampilkan list
-                    renderHistoryList(dataRows);
-                    
-                    dataContainer.style.display = 'block';
-                    emptyState.style.display = 'none';
-                } else {
-                    dataContainer.style.display = 'none';
-                    emptyState.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('❌ Error:', error);
-                loadingState.style.display = 'none';
-                
-                // Coba load dari localStorage
-                const localData = JSON.parse(localStorage.getItem('monitoring_local') || '[]');
-                if (localData.length > 0) {
-                    renderHistoryListFromLocal(localData);
-                    dataContainer.style.display = 'block';
-                    emptyState.style.display = 'none';
-                } else {
-                    dataContainer.style.display = 'none';
-                    emptyState.style.display = 'block';
-                }
+        try {
+            const url = API_URL + '?action=getHistory&userId=' + session.userId;
+            const response = await fetch(url);
+            const result = await response.json();
+            console.log('📥 History:', result);
+
+            if (result.success && result.data && result.data.length > 1) {
+                allData = result.data.slice(1);
+                renderHistory();
+            } else {
+                renderEmpty();
             }
+        } catch (error) {
+            console.error('❌ Error:', error);
+            renderEmpty();
+        }
+    }
+
+    function renderHistory() {
+        const container = document.getElementById('historyContent');
+        
+        let filteredData = [...allData];
+        if (currentPeriode === '7') filteredData = allData.slice(-7);
+        if (currentPeriode === '30') filteredData = allData.slice(-30);
+
+        if (filteredData.length === 0) {
+            renderEmpty();
+            return;
         }
 
-        // ============================================
-        // UPDATE RINGKASAN
-        // ============================================
-        function updateSummary(dataRows) {
-            if (dataRows.length === 0) return;
-            
-            const latest = dataRows[dataRows.length - 1];
-            // Data: [Timestamp, UserID, Tgl, BB, TB, Hb, IDDS, Diterima, Ditolak, Sensori]
-            
-            const bb = latest[3] || '-';
-            const tb = latest[4] || '-';
-            const idds = latest[6] || '-';
-            
-            // Masukkan ringkasan ke atas
-            const summaryHTML = `
-                <div class="summary-strip">
-                    <div class="summary-item bb">
-                        <div class="val">${bb} kg</div>
-                        <div class="lbl">BB Terakhir</div>
-                    </div>
-                    <div class="summary-item tb">
-                        <div class="val">${tb} cm</div>
-                        <div class="lbl">TB Terakhir</div>
-                    </div>
-                    <div class="summary-item idds">
-                        <div class="val">${idds}/9</div>
-                        <div class="lbl">IDDS</div>
-                    </div>
+        let html = renderSummary(filteredData);
+        html += renderStatusBanner(filteredData);
+
+        for (let i = filteredData.length - 1; i >= 0; i--) {
+            html += renderDayCard(filteredData[i], i);
+        }
+
+        container.innerHTML = html;
+    }
+
+    function renderSummary(data) {
+        let bbTerakhir = '--', tbTerakhir = '--', hbTerakhir = '--', iddsTerakhir = '--';
+        
+        for (let i = data.length - 1; i >= 0; i--) {
+            if (parseFloat(data[i][3]) > 0) { bbTerakhir = data[i][3] + ' kg'; break; }
+        }
+        for (let i = data.length - 1; i >= 0; i--) {
+            if (parseFloat(data[i][4]) > 0) { tbTerakhir = data[i][4] + ' cm'; break; }
+        }
+        for (let i = data.length - 1; i >= 0; i--) {
+            if (parseFloat(data[i][5]) > 0) { hbTerakhir = data[i][5] + ' g/dL'; break; }
+        }
+        for (let i = data.length - 1; i >= 0; i--) {
+            if (parseInt(data[i][6]) > 0) { iddsTerakhir = data[i][6] + '/9'; break; }
+        }
+
+        return `
+            <div class="summary-strip">
+                <h3>📊 Ringkasan Data Terakhir</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">⚖️ BB: <span class="val">${bbTerakhir}</span></div>
+                    <div class="summary-item">📏 TB: <span class="val">${tbTerakhir}</span></div>
+                    <div class="summary-item">🩸 Hb: <span class="val">${hbTerakhir}</span></div>
+                    <div class="summary-item">🍽️ IDDS: <span class="val">${iddsTerakhir}</span></div>
                 </div>
-                <div class="mini-chart" id="chartContainer">
-                    <h3>📈 Trend Berat Badan</h3>
-                    <div class="chart-area" id="chartArea"></div>
-                    <div class="chart-label"><span>Awal</span><span>Terbaru</span></div>
+            </div>
+        `;
+    }
+
+    function renderStatusBanner(data) {
+        let hbTerakhir = 0;
+        let tbTerakhir = 0;
+        
+        for (let i = data.length - 1; i >= 0; i--) {
+            if (parseFloat(data[i][5]) > 0) { hbTerakhir = parseFloat(data[i][5]); break; }
+        }
+        for (let i = data.length - 1; i >= 0; i--) {
+            if (parseFloat(data[i][4]) > 0) { tbTerakhir = parseFloat(data[i][4]); break; }
+        }
+        
+        let stuntingStatus = cekStunting(tbTerakhir);
+        let anemiaStatus = cekAnemia(hbTerakhir);
+        
+        let html = '';
+        
+        if (stuntingStatus.level === 'danger') {
+            html += `<div class="status-banner danger">🔴 Risiko STUNTING — TB: ${tbTerakhir} cm</div>`;
+        } else if (stuntingStatus.level === 'warning') {
+            html += `<div class="status-banner warning">🟡 TB perlu dipantau — TB: ${tbTerakhir} cm</div>`;
+        } else if (tbTerakhir > 0) {
+            html += `<div class="status-banner success">✅ TB dalam rentang normal — ${tbTerakhir} cm</div>`;
+        }
+        
+        if (anemiaStatus.level === 'danger') {
+            html += `<div class="status-banner danger">🔴 ANEMIA — Hb: ${hbTerakhir} g/dL</div>`;
+        } else if (anemiaStatus.level === 'warning') {
+            html += `<div class="status-banner warning">🟡 Hb sedikit di bawah normal — Hb: ${hbTerakhir} g/dL</div>`;
+        } else if (hbTerakhir > 0) {
+            html += `<div class="status-banner success">✅ Hb normal — ${hbTerakhir} g/dL</div>`;
+        }
+        
+        return html;
+    }
+
+    function cekStunting(tb) {
+        if (tb <= 0) return {level: 'none', label: ''};
+        if (tb < 105) return {level: 'danger', label: 'Stunting'};
+        if (tb < 110) return {level: 'warning', label: 'Perlu Dipantau'};
+        return {level: 'normal', label: 'Normal'};
+    }
+
+    function cekAnemia(hb) {
+        if (hb <= 0) return {level: 'none', label: ''};
+        if (hb < 8) return {level: 'danger', label: 'Anemia Berat'};
+        if (hb < 11) return {level: 'danger', label: 'Anemia Sedang'};
+        if (hb < 11.5) return {level: 'warning', label: 'Anemia Ringan'};
+        return {level: 'normal', label: 'Normal'};
+    }
+
+    function renderDayCard(data, index) {
+        const tgl = data[2] instanceof Date ? 
+            data[2].toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long'}) : 
+            String(data[2]).split('T')[0];
+        
+        const bb = parseFloat(data[3]) || 0;
+        const tb = parseFloat(data[4]) || 0;
+        const hb = parseFloat(data[5]) || 0;
+        const idds = parseInt(data[6]) || 0;
+        const kalori = parseInt(data[10]) || 0;
+        const catatan = data[9] || '';
+        const detail = data[13] || '[]';
+
+        let badgeClass = 'badge-baik';
+        let badgeText = 'Baik';
+        if (idds > 0 && idds < 4) { badgeClass = 'badge-kurang'; badgeText = 'Kurang'; }
+        else if (idds > 0 && idds < 6) { badgeClass = 'badge-sedang'; badgeText = 'Sedang'; }
+        else if (idds === 0) { badgeClass = 'badge-sedang'; badgeText = 'Tanpa IDDS'; }
+
+        // Status Stunting & Anemia
+        const stunting = cekStunting(tb);
+        const anemia = cekAnemia(hb);
+        
+        let statusTags = '';
+        if (stunting.level === 'danger') statusTags += `<span class="status-tag stunting-berat">🔴 Stunting</span>`;
+        else if (stunting.level === 'warning') statusTags += `<span class="status-tag ${stunting.level}">🟡 TB Perlu Dipantau</span>`;
+        else if (tb > 0) statusTags += `<span class="status-tag stunting-normal">✅ TB Normal</span>`;
+        
+        if (anemia.level === 'danger') statusTags += `<span class="status-tag anemia-berat">🔴 ${anemia.label}</span>`;
+        else if (anemia.level === 'warning') statusTags += `<span class="status-tag anemia-sedang">🟡 ${anemia.label}</span>`;
+        else if (hb > 0) statusTags += `<span class="status-tag anemia-normal">✅ Hb Normal</span>`;
+
+        let sesiBlocks = '';
+        try {
+            const detailList = JSON.parse(detail);
+            if (detailList.length > 0) {
+                const sesiMap = {};
+                detailList.forEach(item => {
+                    const sesiName = item.sesi || 'lainnya';
+                    if (!sesiMap[sesiName]) sesiMap[sesiName] = [];
+                    sesiMap[sesiName].push(item);
+                });
+                const sesiLabels = {'sarapan':'🌅 Sarapan','siang':'☀️ Siang','malam':'🌙 Malam','camilan':'🍪 Camilan'};
+                Object.keys(sesiMap).forEach(sesi => {
+                    const items = sesiMap[sesi];
+                    sesiBlocks += `<div class="sesi-block"><div class="sesi-label">${sesiLabels[sesi] || sesi}</div>`;
+                    items.forEach(item => {
+                        sesiBlocks += `<div class="sesi-item"><span class="food-icon">${item.food?.icon || '🍽️'}</span><span class="food-name">${item.food?.nama || 'Makanan'}</span><span class="food-gram">${item.berat}g</span><span class="status-dot ${item.status || 'habis'}"></span></div>`;
+                    });
+                    sesiBlocks += `</div>`;
+                });
+            }
+        } catch(e) {}
+
+        return `
+            <div class="day-card" onclick="toggleDay(${index})">
+                <div class="day-header">
+                    <span class="day-date">📅 ${tgl}</span>
+                    <span class="day-badge ${badgeClass}">${idds > 0 ? 'IDDS: ' + idds + '/9 ' + badgeText : badgeText}</span>
                 </div>
-            `;
-            
-            document.getElementById('dataContainer').innerHTML = summaryHTML + '<div class="history-list" id="historyList"></div>';
-        }
+                <div class="day-metrics">
+                    ${bb > 0 ? `<span class="metric">⚖️ <span class="val">${bb} kg</span></span>` : ''}
+                    ${tb > 0 ? `<span class="metric">📏 <span class="val">${tb} cm</span></span>` : ''}
+                    ${hb > 0 ? `<span class="metric">🩸 <span class="val">${hb} g/dL</span></span>` : ''}
+                    ${kalori > 0 ? `<span class="metric">🍚 <span class="val">${kalori} kkal</span></span>` : ''}
+                </div>
+                ${statusTags ? `<div class="day-status">${statusTags}</div>` : ''}
+                <div class="day-detail" id="detail_${index}">
+                    ${sesiBlocks}
+                    ${catatan ? `<div class="catatan-box">📝 ${catatan}</div>` : ''}
+                </div>
+            </div>
+        `;
+    }
 
-        // ============================================
-        // RENDER GRAFIK SEDERHANA
-        // ============================================
-        function renderChart(dataRows) {
-            const chartArea = document.getElementById('chartArea');
-            if (!chartArea) return;
-            
-            // Ambil data BB
-            const bbData = dataRows.map(row => parseFloat(row[3]) || 0).filter(v => v > 0);
-            
-            if (bbData.length === 0) {
-                chartArea.innerHTML = '<p style="font-size:12px; color:var(--text-gray); text-align:center; width:100%;">Belum cukup data</p>';
-                return;
-            }
-            
-            const maxBB = Math.max(...bbData);
-            const minBB = Math.min(...bbData);
-            const range = maxBB - minBB || 1;
-            
-            let barsHTML = '';
-            bbData.forEach((bb, i) => {
-                const height = ((bb - minBB) / range) * 80 + 20; // Minimal 20px
-                barsHTML += `<div class="chart-bar" style="height:${height}px;" title="BB: ${bb} kg"></div>`;
-            });
-            
-            chartArea.innerHTML = barsHTML;
-        }
+    function toggleDay(index) {
+        const detail = document.getElementById('detail_' + index);
+        if (detail) detail.classList.toggle('open');
+    }
 
-        // ============================================
-        // RENDER LIST HISTORY DARI SERVER
-        // ============================================
-        function renderHistoryList(dataRows) {
-            const historyList = document.getElementById('historyList');
-            if (!historyList) return;
-            
-            let html = '';
-            
-            // Tampilkan dari yang terbaru
-            for (let i = dataRows.length - 1; i >= 0; i--) {
-                const row = dataRows[i];
-                const tgl = row[2] ? new Date(row[2]).toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) : '-';
-                const bb = row[3] || '-';
-                const tb = row[4] || '-';
-                const hb = row[5] || '-';
-                const idds = parseInt(row[6]) || 0;
-                const diterima = row[7] || '';
-                const ditolak = row[8] || '';
-                const sensori = row[9] || '';
-                
-                let badgeClass = 'badge-baik';
-                let badgeText = 'Baik';
-                if (idds < 4) { badgeClass = 'badge-kurang'; badgeText = 'Kurang'; }
-                else if (idds < 6) { badgeClass = 'badge-sedang'; badgeText = 'Sedang'; }
-                
-                html += `
-                    <div class="history-item">
-                        <div class="history-date">
-                            📅 ${tgl}
-                            <span class="history-badge ${badgeClass}">IDDS: ${idds}/9 ${badgeText}</span>
-                        </div>
-                        <div class="history-detail">
-                            <div>⚖️ BB: <span>${bb} kg</span></div>
-                            <div>📏 TB: <span>${tb} cm</span></div>
-                            <div>🩸 Hb: <span>${hb} g/dL</span></div>
-                            <div>📝 <span>${sensori || '-'}</span></div>
-                        </div>
-                        ${diterima || ditolak ? `
-                        <div class="history-makanan">
-                            ${diterima ? `<span class="makanan-tag tag-diterima">✅ ${diterima}</span>` : ''}
-                            ${ditolak ? `<span class="makanan-tag tag-ditolak">❌ ${ditolak}</span>` : ''}
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-            
-            historyList.innerHTML = html;
-        }
+    function renderEmpty() {
+        document.getElementById('historyContent').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <h3>Belum ada data monitoring</h3>
+                <p>Yuk mulai catat tumbuh kembang si kecil!</p>
+                <a href="monitoring.html">➕ Input Data</a>
+            </div>
+        `;
+    }
 
-        // ============================================
-        // RENDER LIST DARI LOCAL STORAGE
-        // ============================================
-        function renderHistoryListFromLocal(localData) {
-            document.getElementById('dataContainer').innerHTML = '<div class="history-list" id="historyList"></div>';
-            const historyList = document.getElementById('historyList');
-            
-            let html = '<p style="font-size:12px; color:#f59e0b; margin-bottom:12px;">⚠️ Data dari penyimpanan lokal (belum tersinkron)</p>';
-            
-            for (let i = localData.length - 1; i >= 0; i--) {
-                const row = localData[i];
-                const tgl = row.tgl_catat || row.timestamp || '-';
-                const bb = row.berat_badan || '-';
-                const tb = row.tinggi_badan || '-';
-                const idds = row.skor_idds || 0;
-                
-                html += `
-                    <div class="history-item">
-                        <div class="history-date">📅 ${new Date(tgl).toLocaleDateString('id-ID')}</div>
-                        <div class="history-detail">
-                            <div>⚖️ BB: <span>${bb} kg</span></div>
-                            <div>📏 TB: <span>${tb} cm</span></div>
-                            <div>🍊 IDDS: <span>${idds}/9</span></div>
-                            <div>💾 <span style="color:#f59e0b;">Lokal</span></div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            historyList.innerHTML = html;
-        }
+    function logout() {
+        localStorage.removeItem('asd_nutrition_session');
+        window.location.href = 'index.html';
+    }
 
-        // ============================================
-        // LOGOUT
-        // ============================================
-        function logout() {
-            localStorage.removeItem('asd_nutrition_session');
-            window.location.href = 'index.html';
-        }
+    loadHistory();
+    console.log('✅ History ready dengan status Stunting & Anemia');
+</script>
 
-        // Load saat halaman dibuka
-        loadHistory();
-        console.log('✅ History page ready');
-    </script>
 </body>
 </html>
